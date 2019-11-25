@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/cleger/Dev/hardware/split_flap/hw/split_flap/split_flap.sch)
-    (date "dim. 24 nov. 2019 19:08:00 CET")
+    (date "dim. 24 nov. 2019 20:08:05 CET")
     (tool "Eeschema 5.1.4+dfsg1-2")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
