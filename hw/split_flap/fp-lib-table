@@ -1,3 +1,3 @@
 (fp_lib_table
-  (lib (name ESP)(type KiCad)(uri /home/cleger/Dev/hardware/split_flap/hw/split_flap/kicad-ESP8266/ESP8266.pretty)(options "")(descr ""))
+  (lib (name ESP)(type KiCad)(uri ${KIPRJMOD}/kicad-ESP8266/ESP8266.pretty)(options "")(descr ""))
 )
