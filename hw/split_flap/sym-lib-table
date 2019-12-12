@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name ESP)(type Legacy)(uri ${KIPRJMOD}/kicad-ESP8266/ESP8266.lib)(options "")(descr ""))
+  (lib (name 74HCT125)(type Legacy)(uri ${KIPRJMOD}/74HCT125.lib)(options "")(descr ""))
 )
