@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 6
+Sheet 3 6
 Title ""
 Date ""
 Rev ""
@@ -29,17 +29,9 @@ $EndComp
 Wire Wire Line
 	4700 3100 4700 2700
 Wire Wire Line
-	4000 3700 4000 3800
-Wire Wire Line
-	4000 3700 4200 3700
-Wire Wire Line
-	4000 3800 4200 3800
-Wire Wire Line
 	4050 3400 4200 3400
 Wire Wire Line
 	4200 3500 4050 3500
-Wire Wire Line
-	4200 3900 4000 3900
 $Comp
 L power:GND #PWR?
 U 1 1 5E06FCD3
@@ -317,7 +309,7 @@ AR Path="/5E06FD51" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD51" Ref="R2"  Part="1" 
 F 0 "R2" H 5620 3146 50  0000 L CNN
 F 1 "R" H 5620 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 5480 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5480 3100 50  0001 C CNN
 F 3 "~" H 5550 3100 50  0001 C CNN
 	1    5550 3100
 	1    0    0    -1  
@@ -330,7 +322,7 @@ AR Path="/5E06FD57" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD57" Ref="R3"  Part="1" 
 F 0 "R3" H 5770 3146 50  0000 L CNN
 F 1 "R" H 5770 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 5630 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5630 3100 50  0001 C CNN
 F 3 "~" H 5700 3100 50  0001 C CNN
 	1    5700 3100
 	1    0    0    -1  
@@ -343,7 +335,7 @@ AR Path="/5E06FD5D" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD5D" Ref="R4"  Part="1" 
 F 0 "R4" H 5920 3146 50  0000 L CNN
 F 1 "R" H 5920 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 5780 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5780 3100 50  0001 C CNN
 F 3 "~" H 5850 3100 50  0001 C CNN
 	1    5850 3100
 	1    0    0    -1  
@@ -356,7 +348,7 @@ AR Path="/5E06FD63" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD63" Ref="R5"  Part="1" 
 F 0 "R5" H 6070 3146 50  0000 L CNN
 F 1 "R" H 6070 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 5930 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5930 3100 50  0001 C CNN
 F 3 "~" H 6000 3100 50  0001 C CNN
 	1    6000 3100
 	1    0    0    -1  
@@ -369,7 +361,7 @@ AR Path="/5E06FD69" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD69" Ref="R6"  Part="1" 
 F 0 "R6" H 6220 3146 50  0000 L CNN
 F 1 "R" H 6220 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 6080 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6080 3100 50  0001 C CNN
 F 3 "~" H 6150 3100 50  0001 C CNN
 	1    6150 3100
 	1    0    0    -1  
@@ -382,7 +374,7 @@ AR Path="/5E06FD6F" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD6F" Ref="R7"  Part="1" 
 F 0 "R7" H 6370 3146 50  0000 L CNN
 F 1 "R" H 6370 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 6230 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6230 3100 50  0001 C CNN
 F 3 "~" H 6300 3100 50  0001 C CNN
 	1    6300 3100
 	1    0    0    -1  
@@ -415,7 +407,7 @@ AR Path="/5E06FD82" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD82" Ref="R1"  Part="1" 
 F 0 "R1" H 5470 3146 50  0000 L CNN
 F 1 "R" H 5470 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 5330 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5330 3100 50  0001 C CNN
 F 3 "~" H 5400 3100 50  0001 C CNN
 	1    5400 3100
 	1    0    0    -1  
@@ -442,7 +434,7 @@ AR Path="/5E06FD8F" Ref="R?"  Part="1"
 AR Path="/5E065378/5E06FD8F" Ref="R8"  Part="1" 
 F 0 "R8" H 6520 3146 50  0000 L CNN
 F 1 "R" H 6520 3055 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 6380 3100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6380 3100 50  0001 C CNN
 F 3 "~" H 6450 3100 50  0001 C CNN
 	1    6450 3100
 	1    0    0    -1  
@@ -477,24 +469,7 @@ Connection ~ 6450 4100
 Wire Wire Line
 	6450 4100 6750 4100
 Wire Wire Line
-	4000 3800 4000 3900
-Connection ~ 4000 3800
-Connection ~ 4000 3700
-Wire Wire Line
 	4100 4200 4200 4200
-$Comp
-L power:+5V #PWR?
-U 1 1 5E06FDAF
-P 3450 3700
-AR Path="/5E06FDAF" Ref="#PWR?"  Part="1" 
-AR Path="/5E065378/5E06FDAF" Ref="#PWR014"  Part="1" 
-F 0 "#PWR014" H 3450 3550 50  0001 C CNN
-F 1 "+5V" H 3465 3873 50  0000 C CNN
-F 2 "" H 3450 3700 50  0001 C CNN
-F 3 "" H 3450 3700 50  0001 C CNN
-	1    3450 3700
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:+5V #PWR?
 U 1 1 5E06FDB5
@@ -523,10 +498,20 @@ F 3 "" H 5400 2850 50  0001 C CNN
 $EndComp
 Text HLabel 4050 3400 0    50   Input ~ 0
 SCL
-Wire Wire Line
-	3450 3700 4000 3700
 Text HLabel 4050 3500 0    50   Input ~ 0
 SDA
 Text HLabel 4100 4200 0    50   Input ~ 0
 INT
+Text HLabel 3850 3700 0    50   Input ~ 0
+A0
+Text HLabel 3850 3800 0    50   Input ~ 0
+A1
+Text HLabel 3850 3900 0    50   Input ~ 0
+A2
+Wire Wire Line
+	3850 3900 4200 3900
+Wire Wire Line
+	3850 3800 4200 3800
+Wire Wire Line
+	3850 3700 4200 3700
 $EndSCHEMATC

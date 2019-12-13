@@ -176,23 +176,21 @@ F 3 "" H 8750 1950 50  0001 C CNN
 	1    8750 1950
 	1    0    0    -1  
 $EndComp
-Text Label 8950 2550 2    50   ~ 0
+Text Label 9850 2350 0    50   ~ 0
 SCL
-Text Label 8950 2650 2    50   ~ 0
+Text Label 9850 2450 0    50   ~ 0
 SDA
-Wire Wire Line
-	8950 2550 9150 2550
 Wire Wire Line
 	9150 2650 8950 2650
 $Sheet
-S 1550 1600 550  750 
+S 4800 1600 550  750 
 U 5DED9C19
 F0 "sheet5DED9C19" 50
 F1 "motor2x.sch" 50
-F2 "DO" I R 2100 1800 50 
-F3 "LATCH" I L 1550 2100 50 
-F4 "DI" I L 1550 1800 50 
-F5 "CLK" I L 1550 1950 50 
+F2 "DO" I R 5350 1800 50 
+F3 "LATCH" I L 4800 2100 50 
+F4 "DI" I L 4800 1800 50 
+F5 "CLK" I L 4800 1950 50 
 $EndSheet
 NoConn ~ 1900 5550
 $Comp
@@ -218,16 +216,9 @@ F 3 "" H 8550 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9150 2350 8550 2350
-Wire Wire Line
 	9150 2250 9150 1950
 Wire Wire Line
 	9150 1950 8750 1950
-Wire Wire Line
-	9650 2250 9650 1950
-Wire Wire Line
-	9650 1950 9150 1950
-Connection ~ 9150 1950
 Wire Wire Line
 	3500 4850 4200 4850
 $Comp
@@ -285,26 +276,29 @@ Wire Wire Line
 	3750 4550 3500 4550
 Wire Wire Line
 	3500 4650 3750 4650
-Text Label 6350 5200 2    50   ~ 0
+Text Label 6350 4800 2    50   ~ 0
 SPI_CLK
 Wire Wire Line
 	1550 1800 1200 1800
-Text Label 6350 4800 2    50   ~ 0
+Text Label 7300 5200 0    50   ~ 0
 SPI_DO
 Wire Wire Line
 	1200 1950 1550 1950
-Text Label 7300 5200 0    50   ~ 0
+Text Label 6350 5200 2    50   ~ 0
 SPI_CS
 Wire Wire Line
 	1200 2100 1550 2100
 $Sheet
-S 9550 3900 550  600 
+S 9550 3900 550  550 
 U 5E065378
 F0 "input_expander_1" 50
 F1 "input_expander.sch" 50
 F2 "SCL" I L 9550 4050 50 
 F3 "SDA" I L 9550 4200 50 
 F4 "INT" I L 9550 4350 50 
+F5 "A0" I R 10100 4050 50 
+F6 "A1" I R 10100 4200 50 
+F7 "A2" I R 10100 4350 50 
 $EndSheet
 Text Label 2850 1950 2    50   ~ 0
 SPI_CLK
@@ -315,14 +309,14 @@ SPI_CS
 Wire Wire Line
 	2850 2100 3200 2100
 $Sheet
-S 4800 1600 550  750 
+S 6400 1600 550  750 
 U 5E0964A4
 F0 "sheet5E0964A4" 50
 F1 "motor2x.sch" 50
-F2 "DO" I R 5350 1800 50 
-F3 "LATCH" I L 4800 2100 50 
-F4 "DI" I L 4800 1800 50 
-F5 "CLK" I L 4800 1950 50 
+F2 "DO" I R 6950 1800 50 
+F3 "LATCH" I L 6400 2100 50 
+F4 "DI" I L 6400 1800 50 
+F5 "CLK" I L 6400 1950 50 
 $EndSheet
 Text Label 4450 1950 2    50   ~ 0
 SPI_CLK
@@ -352,17 +346,15 @@ Wire Wire Line
 	9400 4050 9550 4050
 Wire Wire Line
 	9400 4350 9550 4350
-Text Label 8950 2450 2    50   ~ 0
+Text Label 9650 2250 0    50   ~ 0
 INT
 Text Label 7250 1800 0    50   ~ 0
 DI_EXP
-Text Label 9850 2550 0    50   ~ 0
+Text Label 8950 2650 2    50   ~ 0
 DI_EXP
-Wire Wire Line
-	9150 2450 8950 2450
-Text Label 9850 2350 0    50   ~ 0
+Text Label 9850 2650 0    50   ~ 0
 SPI_CLK
-Text Label 9850 2450 0    50   ~ 0
+Text Label 9850 2550 0    50   ~ 0
 SPI_CS
 Wire Wire Line
 	9650 2350 9850 2350
@@ -371,25 +363,12 @@ Wire Wire Line
 Wire Wire Line
 	9650 2550 9850 2550
 $Comp
-L power:GND #PWR07
-U 1 1 5E0D652A
-P 9650 2750
-F 0 "#PWR07" H 9650 2500 50  0001 C CNN
-F 1 "GND" H 9655 2577 50  0000 C CNN
-F 2 "" H 9650 2750 50  0001 C CNN
-F 3 "" H 9650 2750 50  0001 C CNN
-	1    9650 2750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	9650 2650 9650 2750
-$Comp
 L 74HCT125:74HCT125 U1
 U 1 1 5E118492
 P 6850 4900
 F 0 "U1" H 6825 5581 50  0000 C CNN
 F 1 "74HCT125" H 6825 5490 50  0000 C CNN
-F 2 "" H 6850 4900 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 6850 4900 50  0001 C CNN
 F 3 "" H 6850 4900 50  0001 C CNN
 	1    6850 4900
 	1    0    0    -1  
@@ -411,31 +390,31 @@ Wire Wire Line
 	7800 4700 7800 5000
 Wire Wire Line
 	7300 5000 7800 5000
-Text Label 6350 4700 2    50   ~ 0
-SPI_3.3_DO
-Text Label 6350 5100 2    50   ~ 0
-SPI_3.3_CLK
 Text Label 7300 5100 0    50   ~ 0
+SPI_3.3_DO
+Text Label 6350 4700 2    50   ~ 0
+SPI_3.3_CLK
+Text Label 6350 5100 2    50   ~ 0
 SPI_3.3_CS
 $Sheet
-S 3200 1600 550  750 
+S 1550 1600 550  750 
 U 5E092C79
 F0 "sheet5E092C79" 50
+F1 "motor2x.sch" 50
+F2 "DO" I R 2100 1800 50 
+F3 "LATCH" I L 1550 2100 50 
+F4 "DI" I L 1550 1800 50 
+F5 "CLK" I L 1550 1950 50 
+$EndSheet
+$Sheet
+S 3200 1600 550  750 
+U 5E0B21A0
+F0 "sheet5E0B21A0" 50
 F1 "motor2x.sch" 50
 F2 "DO" I R 3750 1800 50 
 F3 "LATCH" I L 3200 2100 50 
 F4 "DI" I L 3200 1800 50 
 F5 "CLK" I L 3200 1950 50 
-$EndSheet
-$Sheet
-S 6400 1600 550  750 
-U 5E0B21A0
-F0 "sheet5E0B21A0" 50
-F1 "motor2x.sch" 50
-F2 "DO" I R 6950 1800 50 
-F3 "LATCH" I L 6400 2100 50 
-F4 "DI" I L 6400 1800 50 
-F5 "CLK" I L 6400 1950 50 
 $EndSheet
 Wire Wire Line
 	7250 1800 6950 1800
@@ -506,4 +485,39 @@ Text Label 1200 2100 2    50   ~ 0
 SPI_CS
 Text Label 1200 1800 2    50   ~ 0
 SPI_DO
+$Comp
+L power:GND #PWR014
+U 1 1 5DF4FEB1
+P 10400 4350
+F 0 "#PWR014" H 10400 4100 50  0001 C CNN
+F 1 "GND" H 10405 4177 50  0000 C CNN
+F 2 "" H 10400 4350 50  0001 C CNN
+F 3 "" H 10400 4350 50  0001 C CNN
+	1    10400 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10100 4050 10400 4050
+Wire Wire Line
+	10400 4050 10400 4200
+Wire Wire Line
+	10100 4200 10400 4200
+Connection ~ 10400 4200
+Wire Wire Line
+	10400 4200 10400 4350
+Wire Wire Line
+	10100 4350 10400 4350
+Connection ~ 10400 4350
+Wire Wire Line
+	9650 2650 9850 2650
+Wire Wire Line
+	9150 2550 8550 2550
+Wire Wire Line
+	8550 2550 8550 2350
+Wire Wire Line
+	9150 2450 9150 2350
+Wire Wire Line
+	9150 2350 9150 2250
+Connection ~ 9150 2350
+Connection ~ 9150 2250
 $EndSCHEMATC
