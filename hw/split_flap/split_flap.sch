@@ -254,8 +254,6 @@ Wire Wire Line
 Text Label 3650 5050 0    50   ~ 0
 SPI_3.3_CLK
 Text Label 3650 5350 0    50   ~ 0
-SPI_3.3_DO
-Text Label 3650 5250 0    50   ~ 0
 SPI_3.3_CS
 Wire Wire Line
 	3500 5050 3650 5050
@@ -520,4 +518,6 @@ Wire Wire Line
 	9150 2350 9150 2250
 Connection ~ 9150 2350
 Connection ~ 9150 2250
+Text Label 3650 5250 0    50   ~ 0
+SPI_3.3_DO
 $EndSCHEMATC
