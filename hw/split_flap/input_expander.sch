@@ -46,39 +46,7 @@ F 3 "" H 4700 4500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6750 4950 7050 4950
-Wire Wire Line
-	6750 4100 6750 4950
-Wire Wire Line
 	5200 4100 6450 4100
-Wire Wire Line
-	6800 4550 7050 4550
-Wire Wire Line
-	6800 4000 6800 4550
-Wire Wire Line
-	6850 4150 7050 4150
-Wire Wire Line
-	6850 3900 6850 4150
-Wire Wire Line
-	6900 3750 7050 3750
-Wire Wire Line
-	6900 3800 6900 3750
-Wire Wire Line
-	6850 3350 7050 3350
-Wire Wire Line
-	6850 3700 6850 3350
-Wire Wire Line
-	6800 2950 7050 2950
-Wire Wire Line
-	6800 3600 6800 2950
-Wire Wire Line
-	6750 2550 7050 2550
-Wire Wire Line
-	6750 3500 6750 2550
-Wire Wire Line
-	6700 2150 7050 2150
-Wire Wire Line
-	6700 3400 6700 2150
 $Comp
 L power:GND #PWR?
 U 1 1 5E06FCEA
@@ -90,19 +58,6 @@ F 1 "GND" H 7055 2077 50  0000 C CNN
 F 2 "" H 7050 2250 50  0001 C CNN
 F 3 "" H 7050 2250 50  0001 C CNN
 	1    7050 2250
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector_Generic:Conn_01x02 J?
-U 1 1 5E06FCF0
-P 7250 2150
-AR Path="/5E06FCF0" Ref="J?"  Part="1" 
-AR Path="/5E065378/5E06FCF0" Ref="J1"  Part="1" 
-F 0 "J1" H 7330 2142 50  0000 L CNN
-F 1 "Conn_01x02" H 7330 2051 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 2150 50  0001 C CNN
-F 3 "~" H 7250 2150 50  0001 C CNN
-	1    7250 2150
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -119,14 +74,14 @@ F 3 "" H 7050 2650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x02 J?
+L Connector_Generic:Conn_01x03 J?
 U 1 1 5E06FCFC
 P 7250 2550
 AR Path="/5E06FCFC" Ref="J?"  Part="1" 
 AR Path="/5E065378/5E06FCFC" Ref="J2"  Part="1" 
 F 0 "J2" H 7330 2542 50  0000 L CNN
 F 1 "Conn_01x02" H 7330 2451 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 2550 50  0001 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 2550 50  0001 C CNN
 F 3 "~" H 7250 2550 50  0001 C CNN
 	1    7250 2550
 	1    0    0    -1  
@@ -145,14 +100,14 @@ F 3 "" H 7050 3050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x02 J?
+L Connector_Generic:Conn_01x03 J?
 U 1 1 5E06FD08
 P 7250 2950
 AR Path="/5E06FD08" Ref="J?"  Part="1" 
 AR Path="/5E065378/5E06FD08" Ref="J3"  Part="1" 
 F 0 "J3" H 7330 2942 50  0000 L CNN
 F 1 "Conn_01x02" H 7330 2851 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 2950 50  0001 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 2950 50  0001 C CNN
 F 3 "~" H 7250 2950 50  0001 C CNN
 	1    7250 2950
 	1    0    0    -1  
@@ -171,14 +126,14 @@ F 3 "" H 7050 3450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x02 J?
+L Connector_Generic:Conn_01x03 J?
 U 1 1 5E06FD14
 P 7250 3350
 AR Path="/5E06FD14" Ref="J?"  Part="1" 
 AR Path="/5E065378/5E06FD14" Ref="J4"  Part="1" 
 F 0 "J4" H 7330 3342 50  0000 L CNN
 F 1 "Conn_01x02" H 7330 3251 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 3350 50  0001 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 3350 50  0001 C CNN
 F 3 "~" H 7250 3350 50  0001 C CNN
 	1    7250 3350
 	1    0    0    -1  
@@ -197,14 +152,14 @@ F 3 "" H 7050 3850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x02 J?
+L Connector_Generic:Conn_01x03 J?
 U 1 1 5E06FD20
 P 7250 3750
 AR Path="/5E06FD20" Ref="J?"  Part="1" 
 AR Path="/5E065378/5E06FD20" Ref="J5"  Part="1" 
 F 0 "J5" H 7330 3742 50  0000 L CNN
 F 1 "Conn_01x02" H 7330 3651 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 3750 50  0001 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 3750 50  0001 C CNN
 F 3 "~" H 7250 3750 50  0001 C CNN
 	1    7250 3750
 	1    0    0    -1  
@@ -223,14 +178,14 @@ F 3 "" H 7050 4250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x02 J?
+L Connector_Generic:Conn_01x03 J?
 U 1 1 5E06FD2C
 P 7250 4150
 AR Path="/5E06FD2C" Ref="J?"  Part="1" 
 AR Path="/5E065378/5E06FD2C" Ref="J6"  Part="1" 
 F 0 "J6" H 7330 4142 50  0000 L CNN
 F 1 "Conn_01x02" H 7330 4051 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 4150 50  0001 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 4150 50  0001 C CNN
 F 3 "~" H 7250 4150 50  0001 C CNN
 	1    7250 4150
 	1    0    0    -1  
@@ -262,27 +217,27 @@ F 3 "" H 7050 5050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x02 J?
+L Connector_Generic:Conn_01x03 J?
 U 1 1 5E06FD3E
 P 7250 4950
 AR Path="/5E06FD3E" Ref="J?"  Part="1" 
 AR Path="/5E065378/5E06FD3E" Ref="J8"  Part="1" 
 F 0 "J8" H 7330 4942 50  0000 L CNN
 F 1 "Conn_01x02" H 7330 4851 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 4950 50  0001 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 4950 50  0001 C CNN
 F 3 "~" H 7250 4950 50  0001 C CNN
 	1    7250 4950
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x02 J?
+L Connector_Generic:Conn_01x03 J?
 U 1 1 5E06FD44
 P 7250 4550
 AR Path="/5E06FD44" Ref="J?"  Part="1" 
 AR Path="/5E065378/5E06FD44" Ref="J7"  Part="1" 
 F 0 "J7" H 7330 4542 50  0000 L CNN
 F 1 "Conn_01x02" H 7330 4451 50  0000 L CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 7250 4550 50  0001 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 4550 50  0001 C CNN
 F 3 "~" H 7250 4550 50  0001 C CNN
 	1    7250 4550
 	1    0    0    -1  
@@ -514,4 +469,153 @@ Wire Wire Line
 	3850 3800 4200 3800
 Wire Wire Line
 	3850 3700 4200 3700
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 5E06FCF0
+P 7250 2150
+AR Path="/5E06FCF0" Ref="J?"  Part="1" 
+AR Path="/5E065378/5E06FCF0" Ref="J1"  Part="1" 
+F 0 "J1" H 7330 2142 50  0000 L CNN
+F 1 "Conn_01x02" H 7330 2051 50  0000 L CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 7250 2150 50  0001 C CNN
+F 3 "~" H 7250 2150 50  0001 C CNN
+	1    7250 2150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6700 2050 7050 2050
+Wire Wire Line
+	6700 2050 6700 3400
+Wire Wire Line
+	6750 2450 7050 2450
+Wire Wire Line
+	6750 2450 6750 3500
+Wire Wire Line
+	6800 2850 7050 2850
+Wire Wire Line
+	6800 2850 6800 3600
+Wire Wire Line
+	6850 3250 7050 3250
+Wire Wire Line
+	6850 3250 6850 3700
+Wire Wire Line
+	6900 3650 7050 3650
+Wire Wire Line
+	6900 3650 6900 3800
+Wire Wire Line
+	6850 3900 6850 4050
+Wire Wire Line
+	6850 4050 7050 4050
+Wire Wire Line
+	6800 4000 6800 4450
+Wire Wire Line
+	6800 4450 7050 4450
+Wire Wire Line
+	6750 4100 6750 4850
+Wire Wire Line
+	6750 4850 7050 4850
+$Comp
+L power:+5V #PWR062
+U 1 1 5DFB10BE
+P 6900 4150
+F 0 "#PWR062" H 6900 4000 50  0001 C CNN
+F 1 "+5V" H 6915 4323 50  0000 C CNN
+F 2 "" H 6900 4150 50  0001 C CNN
+F 3 "" H 6900 4150 50  0001 C CNN
+	1    6900 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR063
+U 1 1 5DFB1594
+P 6900 4550
+F 0 "#PWR063" H 6900 4400 50  0001 C CNN
+F 1 "+5V" H 6915 4723 50  0000 C CNN
+F 2 "" H 6900 4550 50  0001 C CNN
+F 3 "" H 6900 4550 50  0001 C CNN
+	1    6900 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR064
+U 1 1 5DFB1958
+P 6900 4950
+F 0 "#PWR064" H 6900 4800 50  0001 C CNN
+F 1 "+5V" H 6915 5123 50  0000 C CNN
+F 2 "" H 6900 4950 50  0001 C CNN
+F 3 "" H 6900 4950 50  0001 C CNN
+	1    6900 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR067
+U 1 1 5DFB236A
+P 6950 3750
+F 0 "#PWR067" H 6950 3600 50  0001 C CNN
+F 1 "+5V" H 6965 3923 50  0000 C CNN
+F 2 "" H 6950 3750 50  0001 C CNN
+F 3 "" H 6950 3750 50  0001 C CNN
+	1    6950 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR066
+U 1 1 5DFB2680
+P 6950 3350
+F 0 "#PWR066" H 6950 3200 50  0001 C CNN
+F 1 "+5V" H 6965 3523 50  0000 C CNN
+F 2 "" H 6950 3350 50  0001 C CNN
+F 3 "" H 6950 3350 50  0001 C CNN
+	1    6950 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR065
+U 1 1 5DFB3078
+P 6950 2950
+F 0 "#PWR065" H 6950 2800 50  0001 C CNN
+F 1 "+5V" H 6965 3123 50  0000 C CNN
+F 2 "" H 6950 2950 50  0001 C CNN
+F 3 "" H 6950 2950 50  0001 C CNN
+	1    6950 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR061
+U 1 1 5DFB33BC
+P 6900 2550
+F 0 "#PWR061" H 6900 2400 50  0001 C CNN
+F 1 "+5V" H 6915 2723 50  0000 C CNN
+F 2 "" H 6900 2550 50  0001 C CNN
+F 3 "" H 6900 2550 50  0001 C CNN
+	1    6900 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR060
+U 1 1 5DFB3F11
+P 6900 2150
+F 0 "#PWR060" H 6900 2000 50  0001 C CNN
+F 1 "+5V" H 6915 2323 50  0000 C CNN
+F 2 "" H 6900 2150 50  0001 C CNN
+F 3 "" H 6900 2150 50  0001 C CNN
+	1    6900 2150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7050 2150 6900 2150
+Wire Wire Line
+	6900 2550 7050 2550
+Wire Wire Line
+	6950 2950 7050 2950
+Wire Wire Line
+	6950 3350 7050 3350
+Wire Wire Line
+	6950 3750 7050 3750
+Wire Wire Line
+	6900 4150 7050 4150
+Wire Wire Line
+	6900 4550 7050 4550
+Wire Wire Line
+	6900 4950 7050 4950
 $EndSCHEMATC
