@@ -262,14 +262,14 @@ Wire Wire Line
 NoConn ~ 3150 4150
 Text Label 3400 4050 0    50   ~ 0
 INT
-Text Label 3400 3950 0    50   ~ 0
+Text Label 3800 3950 0    50   ~ 0
 SDA
-Text Label 3400 3850 0    50   ~ 0
+Text Label 3800 3850 0    50   ~ 0
 SCL
 Wire Wire Line
-	3150 3850 3400 3850
+	3150 3850 3450 3850
 Wire Wire Line
-	3400 3950 3150 3950
+	3800 3950 3600 3950
 Wire Wire Line
 	3150 4050 3400 4050
 Text Label 4600 6450 2    50   ~ 0
@@ -654,4 +654,56 @@ Wire Wire Line
 Connection ~ 9350 4150
 Wire Wire Line
 	9350 4150 9700 4150
+$Comp
+L Device:R R9
+U 1 1 5DFB5E58
+P 3450 3600
+F 0 "R9" H 3520 3646 50  0000 L CNN
+F 1 "R" H 3520 3555 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 3380 3600 50  0001 C CNN
+F 3 "~" H 3450 3600 50  0001 C CNN
+	1    3450 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R10
+U 1 1 5DFBFF10
+P 3600 3600
+F 0 "R10" H 3670 3646 50  0000 L CNN
+F 1 "R" H 3670 3555 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 3530 3600 50  0001 C CNN
+F 3 "~" H 3600 3600 50  0001 C CNN
+	1    3600 3600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 3750 3450 3850
+Connection ~ 3450 3850
+Wire Wire Line
+	3450 3850 3800 3850
+Wire Wire Line
+	3600 3950 3600 3750
+Connection ~ 3600 3950
+Wire Wire Line
+	3600 3950 3150 3950
+$Comp
+L power:+3.3V #PWR071
+U 1 1 5DFC4BEF
+P 3450 3250
+F 0 "#PWR071" H 3450 3100 50  0001 C CNN
+F 1 "+3.3V" H 3465 3423 50  0000 C CNN
+F 2 "" H 3450 3250 50  0001 C CNN
+F 3 "" H 3450 3250 50  0001 C CNN
+	1    3450 3250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 3250 3450 3350
+Wire Wire Line
+	3450 3350 3600 3350
+Wire Wire Line
+	3600 3350 3600 3450
+Connection ~ 3450 3350
+Wire Wire Line
+	3450 3350 3450 3450
 $EndSCHEMATC
