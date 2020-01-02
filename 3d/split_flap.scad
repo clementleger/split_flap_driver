@@ -5,7 +5,7 @@ FLAP_WIDTH = 54;
 FLAP_HEIGHT = 85.6;
 FLAP_THICKNESS = 0.380;
 FLAP_DRUM_WIDTH = FLAP_WIDTH;
-FLAP_CORNER_RADIUS = 4;
+FLAP_CORNER_RADIUS = 3;
 
 FLAP_SIDE_CUT_HEIGHT = 8;
 FLAP_SIDE_CUT_WIDTH = 4;
@@ -16,15 +16,17 @@ FRONT_BOTTOM_OPEN_HEIGHT = 30;
 FRONT_TOP_HEIGHT = 20;
 
 DRUM_FLAPS_COUNT = 40;
-DRUM_FLAPS_HOLE_DIAMETER = 2;
+DRUM_FLAPS_HOLE_DIAMETER = 1.5;
 assert(DRUM_FLAPS_HOLE_DIAMETER > FLAP_CUT_OFFSET);
 DRUM_FLAPS_HOLE_OFFSET = 0.5;
 DRUM_INNER_DIAMETER = 30;
 DRUM_OUTER_DIAMETER = 45;
 DRUM_SIDE_THICKNESS = 2;
+DRUM_FLAP_RADIUS = DRUM_OUTER_DIAMETER/2 - DRUM_FLAPS_HOLE_DIAMETER/2 - DRUM_FLAPS_HOLE_OFFSET;
 
 DRUM_AXIS_OVERLAP = 1;
 assert(DRUM_AXIS_OVERLAP < DRUM_SIDE_THICKNESS);
+/* Add some slack around cards */
 DRUM_AXIS_EXTRA_WIDTH = 1;
 DRUM_AXIS_HEIGHT = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH - DRUM_SIDE_THICKNESS + DRUM_AXIS_OVERLAP;
 DRUM_AXIS_THICKNESS = 0.8;
@@ -66,7 +68,7 @@ module drum_end_with_holes()
         cylinder(d = DRUM_OUTER_DIAMETER, h = DRUM_SIDE_THICKNESS);
         /* Flaps holes */
         for (hole=[1:DRUM_FLAPS_COUNT])
-            rotate([0, 0, hole * (360/DRUM_FLAPS_COUNT)  ]) translate([DRUM_OUTER_DIAMETER/2 - DRUM_FLAPS_HOLE_DIAMETER/2 - DRUM_FLAPS_HOLE_OFFSET , 0, 0]) cylinder(d = DRUM_FLAPS_HOLE_DIAMETER, h = DRUM_SIDE_THICKNESS);
+            rotate([0, 0, hole * (360/DRUM_FLAPS_COUNT)  ]) translate([DRUM_FLAP_RADIUS, 0, 0]) cylinder(d = DRUM_FLAPS_HOLE_DIAMETER, h = DRUM_SIDE_THICKNESS);
         /* Axis */
         cylinder(d = DRUM_CENTER_DIAMETER, h = DRUM_SIDE_THICKNESS);
     }
@@ -118,11 +120,17 @@ module flap()
     }
 }
 
+HANGING_FLAPS_COUNT = DRUM_FLAPS_COUNT/2;
+
 module flaps()
 {
-    /* Flaps */
-    for (flap=[1:DRUM_FLAPS_COUNT])
-            rotate([0, 0, flap * (360/DRUM_FLAPS_COUNT)]) translate([DRUM_OUTER_DIAMETER/2 - DRUM_FLAPS_HOLE_DIAMETER/2 - DRUM_FLAPS_HOLE_OFFSET , 0, DRUM_AXIS_EXTRA_WIDTH/2]) flap();
+    /* Flaps hanging in the bottom of the drum */
+    for (flap=[0:HANGING_FLAPS_COUNT-1]) {
+        translate([DRUM_FLAP_RADIUS * sin(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_FLAP_RADIUS * cos(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_AXIS_EXTRA_WIDTH/2]) rotate([0, 0, -90]) flap();
+    }
+    for (flap=[HANGING_FLAPS_COUNT:DRUM_FLAPS_COUNT - 1]) {
+        translate([DRUM_FLAP_RADIUS * sin(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_FLAP_RADIUS * cos(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_AXIS_EXTRA_WIDTH/2]) rotate([0, 0, - (360 - 90) - flap * (360 / (DRUM_FLAPS_COUNT - 1))]) flap();
+    }
     
 }
 
@@ -137,24 +145,53 @@ module bottom()
 {
     
 }
+
+DISP_BOTTOM_SIZE = 15;
+DISP_TOP_SIZE = 15;
+/* Add some slack to sides */
+DISP_BORDER_ADJUST = 2;
+DISP_BORDER_SIZE = DRUM_PULLEY_HEIGHT + DISP_BORDER_ADJUST;
+assert(DISP_BORDER_SIZE >= DRUM_PULLEY_HEIGHT);
+
+DISP_THICKNESS = 3;
+
+/* Window inside front display */
+DISP_WINDOW_HEIGHT = FLAP_HEIGHT + DRUM_OUTER_DIAMETER / 3;
+DISP_WINDOW_WIDTH = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH;
+
+DISP_TOTAL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
+DISP_FULL_WIDTH = DISP_WINDOW_WIDTH + 2 * DISP_BORDER_SIZE + 2 * DISP_THICKNESS;
+DISP_FULL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
+
 module front()
 {
-    
+    color("salmon")
+    difference() {
+        cube([DISP_FULL_WIDTH, DISP_TOTAL_HEIGHT, DISP_THICKNESS]);
+        translate([DISP_BORDER_SIZE + DISP_THICKNESS, DISP_BOTTOM_SIZE, 0]) cube([DISP_WINDOW_WIDTH, DISP_WINDOW_HEIGHT, DISP_THICKNESS]);
+        
+    }
 }
 
-module top()
-{
 
-}
+front();
 
 module side()
 {
     
 }
 
+DRUM_X_OFFSET = -DRUM_AXIS_EXTRA_WIDTH / 2 - FLAP_WIDTH/2;
+DRUM_Y_OFFSET = - DRUM_FLAP_RADIUS;
+FLAP_Z_ADJUST = 3;
+DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - FLAP_HEIGHT/2 - FLAP_Z_ADJUST;
+
 module split_flap()
 {
-    translate([-DRUM_AXIS_EXTRA_WIDTH - FLAP_WIDTH/2, 0, 0]) rotate([0, 90, 0]) drum();
+    /* Drum */
+    translate([DRUM_X_OFFSET, DRUM_Y_OFFSET, DRUM_Z_OFFSET]) rotate([0, 90, 0]) drum();
+    /* Front */
+    translate([-DISP_FULL_WIDTH/2, DISP_THICKNESS, 0]) rotate([90, 0, 0]) front();
 }
 
-split_flap();
+//split_flap();
