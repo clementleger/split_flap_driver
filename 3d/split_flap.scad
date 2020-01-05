@@ -59,10 +59,10 @@ module hole(width, height, thickness)
     translate([0, height, 0]) cylinder(d = width, h = thickness, $fn = 30);
 }
 
-module drum_plug() 
+module drum_plug(tolerancy = 0) 
 {
-    translate([-DRUM_PLUG_WIDTH/2, 0, -DRUM_PLUG_HEIGHT]) {
-        cube([DRUM_PLUG_WIDTH, DRUM_PLUG_THICKNESS, DRUM_PLUG_HEIGHT]);
+    translate([-DRUM_PLUG_WIDTH/2 - tolerancy/2, 0, -DRUM_PLUG_HEIGHT]) {
+        cube([DRUM_PLUG_WIDTH + tolerancy, DRUM_PLUG_THICKNESS + tolerancy, DRUM_PLUG_HEIGHT]);
         translate([0, DRUM_PLUG_THICKNESS, 0]) rotate([180, 0, 0]) prism(DRUM_PLUG_WIDTH, DRUM_PLUG_THICKNESS, DRUM_PLUG_HEIGHT / 2);
     }
 }
@@ -94,7 +94,7 @@ module clipsable_male_part(width, height, thickness, clip_count = 5, clip_height
     }
 }
 
-module drum_side()
+module drum_side(tolerancy = 0)
 {
     /* Base with holes for flaps */
     drum_end_with_holes();
@@ -105,12 +105,12 @@ module drum_side()
     }
     /* Axis */
     difference() {
-        cylinder(d = DRUM_INNER_DIAMETER, h = DRUM_AXIS_HEIGHT);
-        cylinder(d = DRUM_INNER_DIAMETER - DRUM_AXIS_THICKNESS*2, h = DRUM_AXIS_HEIGHT);
+        cylinder(d = DRUM_INNER_DIAMETER + tolerancy/2, h = DRUM_AXIS_HEIGHT);
+        cylinder(d = DRUM_INNER_DIAMETER - DRUM_AXIS_THICKNESS*2 - tolerancy/2, h = DRUM_AXIS_HEIGHT);
     }
     /* Little plugs on top of axis */
     for (hole=[1:DRUM_PLUG_COUNT])
-            rotate([0, 0, hole * (360/DRUM_PLUG_COUNT)]) translate([0, -DRUM_INNER_DIAMETER/2 + DRUM_AXIS_THICKNESS, DRUM_AXIS_HEIGHT]) drum_plug();
+            rotate([0, 0, hole * (360/DRUM_PLUG_COUNT)]) translate([0, -DRUM_INNER_DIAMETER/2 + DRUM_AXIS_THICKNESS, DRUM_AXIS_HEIGHT]) drum_plug(tolerancy);
 }
 
 module drum_with_belt_side()
@@ -121,7 +121,7 @@ module drum_with_belt_side()
             translate([0, 0, DRUM_SIDE_THICKNESS]) pulley(teeth = DRUM_PULLEY_TEETH, profile = 12, motor_shaft = DRUM_CENTER_DIAMETER, pulley_t_ht = DRUM_PULLEY_HEIGHT);
         }
        
-    drum_side();
+    drum_side(TOLERANCY);
     }
 }
 
@@ -278,7 +278,7 @@ module right_side()
 
 BOTTOM_WIDTH = DISP_FULL_WIDTH - 2 * SIDE_THICKNESS;
 BOTTOM_BORDER_THICKNESS = 8;
-BOTTOM_CARVE_LENGTH = SIDE_LENGTH - 30;
+BOTTOM_CARVE_LENGTH = SIDE_LENGTH - 33;
 BOTTOM_MOTOR_Y_OFFSET = SIDE_LENGTH - 28byj48_chassis_radius * 2;
 MOTOR_HOLDER_THICKNESS = 3;
 MOTOR_HOLDER_WIDTH = 15;
@@ -337,7 +337,7 @@ module bottom()
         translate([-SIDE_THICKNESS, FRONT_CLIP_HEIGHT, 0]) rotate([0, 0, 90]) mirror([0, 1, 0]) side_bottom_clips(TOLERANCY);
     }
     /* Motor_holder */
-    translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor();
+    translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS + TOLERANCY, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor();
 }
 
 module split_flap()
@@ -355,4 +355,11 @@ module split_flap()
     translate([BOTTOM_WIDTH/2, 0, 0]) rotate([0, 0, 180]) bottom();
 }
 
-split_flap();
+//split_flap();
+
+//bottom();
+//right_side();
+//side();
+//front();
+drum_with_belt_side();
+drum_side();
