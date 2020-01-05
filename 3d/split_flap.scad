@@ -1,4 +1,4 @@
-include 
+include <prism.scad>
 include <parametric_pulley.scad>
 include <28byj-48.scad>
 
@@ -23,7 +23,7 @@ DRUM_FLAPS_HOLE_DIAMETER = 2;
 assert(DRUM_FLAPS_HOLE_DIAMETER > FLAP_CUT_OFFSET);
 DRUM_FLAPS_HOLE_OFFSET = 0.5;
 DRUM_INNER_DIAMETER = 30;
-DRUM_OUTER_DIAMETER = 45;
+DRUM_OUTER_DIAMETER = 40;
 DRUM_SIDE_THICKNESS = 2;
 DRUM_FLAP_RADIUS = DRUM_OUTER_DIAMETER/2 - DRUM_FLAPS_HOLE_DIAMETER/2 - DRUM_FLAPS_HOLE_OFFSET;
 
@@ -179,7 +179,7 @@ DISP_TOTAL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
 DISP_FULL_WIDTH = DISP_WINDOW_WIDTH + 2 * DISP_BORDER_SIZE + 2 * SIDE_THICKNESS;
 DISP_FULL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
 
-FRONT_CLIP_HEIGHT = 5;
+FRONT_CLIP_HEIGHT = 3;
 FRONT_CLIP_TOP_WIDTH = 10;
 FRONT_CLIP_BOTTOM_WIDTH = 8;
 FRONT_CLIP_COUNT = 5;
@@ -197,7 +197,7 @@ module front()
         translate([DISP_BORDER_SIZE + SIDE_THICKNESS, DISP_BOTTOM_SIZE, 0]) cube([DISP_WINDOW_WIDTH, DISP_WINDOW_HEIGHT, FRONT_THICKNESS]); 
     }
     /* Side clip parts */
-    rotate([90, 0, 90]) clipsable_male_part(DISP_FULL_HEIGHT, FRONT_THICKNESS, FRONT_THICKNESS);
+    rotate([90, 0, 90]) front_clips();
     translate([DISP_FULL_WIDTH - FRONT_THICKNESS, 0, 0]) rotate([90, 0, 90]) front_clips();
 }
 
@@ -208,19 +208,35 @@ DRUM_Y_OFFSET = - DRUM_FLAP_RADIUS;
 FLAP_Z_ADJUST = 2;
 DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - FLAP_HEIGHT/2 - FLAP_Z_ADJUST;
 
-SIDE_LENGTH = 80;
 SIDE_END_ROUND = 10;
 SIDE_BOTTOM_CLIP_COUNT = 3;
+SIDE_BOTTOM_CLIP_HEIGHT = 3;
 SIDE_DRUM_AXIS_LENGTH = 15;
+
+SIDE_BORDER_THICKNESS = 8;
+
+SIDE_LENGTH = 80;
+
+BOTTOM_THICKNESS = 3;
 
 module side_base()
 {
         linear_extrude(SIDE_THICKNESS) {
-            hull() {
-                translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET]) circle(d = DRUM_INNER_DIAMETER);
-                square([-DRUM_Y_OFFSET, DRUM_Z_OFFSET + DRUM_INNER_DIAMETER/2]);
-                translate([SIDE_LENGTH, SIDE_END_ROUND/2]) circle(d = SIDE_END_ROUND);
-                square([SIDE_LENGTH + SIDE_END_ROUND/2, SIDE_END_ROUND/2]);
+            difference() {
+                /* Outer shell */
+                hull() {
+                    translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET]) circle(d = DRUM_INNER_DIAMETER);
+                    square([-DRUM_Y_OFFSET, DRUM_Z_OFFSET + DRUM_INNER_DIAMETER/2]);
+                    translate([SIDE_LENGTH -  SIDE_END_ROUND/2, SIDE_END_ROUND/2]) circle(d = SIDE_END_ROUND);
+                    square([SIDE_LENGTH - SIDE_END_ROUND/2, SIDE_END_ROUND/2]);
+                }
+                /* Inner removed part */
+                hull() {
+                    translate([-DRUM_Y_OFFSET + SIDE_BORDER_THICKNESS + SIDE_END_ROUND/2, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER]) circle(d = DRUM_INNER_DIAMETER);
+                    translate([SIDE_BORDER_THICKNESS, SIDE_BORDER_THICKNESS])  square([0.1, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER + DRUM_INNER_DIAMETER/2 - SIDE_BORDER_THICKNESS]);
+                    #translate([SIDE_BORDER_THICKNESS, SIDE_BORDER_THICKNESS]) square([SIDE_LENGTH - SIDE_BORDER_THICKNESS * 2, 0.1]);
+                }
+                
             }
         }
 }
@@ -237,31 +253,91 @@ module side_full()
             /* Axis for drum */
             translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET]) cylinder(d = DRUM_CENTER_DIAMETER - TOLERANCY, h = SIDE_DRUM_AXIS_LENGTH);
         }
-        
-        translate([FRONT_CLIP_HEIGHT * 3, SIDE_THICKNESS * 3, 0]) scale([0.6, 0.5, 1]) side_base();
     }
 }
 
 module side_bottom_clips(tolerancy = 0)
 {
-    clipsable_male_part(SIDE_LENGTH + SIDE_END_ROUND/2 - FRONT_CLIP_HEIGHT + tolerancy, SIDE_THICKNESS + tolerancy, SIDE_THICKNESS + tolerancy, SIDE_BOTTOM_CLIP_COUNT);
+    clipsable_male_part(SIDE_LENGTH - FRONT_CLIP_HEIGHT + tolerancy, SIDE_BOTTOM_CLIP_HEIGHT + tolerancy, BOTTOM_THICKNESS + tolerancy, SIDE_BOTTOM_CLIP_COUNT, SIDE_BOTTOM_CLIP_HEIGHT);
 }
 
 module side()
 {
     side_full();
-    
-    translate([FRONT_CLIP_HEIGHT, SIDE_THICKNESS, 0]) rotate([90, 0, 0]) side_bottom_clips();
-    
+    translate([FRONT_CLIP_HEIGHT, BOTTOM_THICKNESS, 0]) rotate([90, 0, 0]) side_bottom_clips();
 }
+
+//side();
 
 module right_side()
 {
     side();
-    
     /* Axis for drum */
-    translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET, SIDE_THICKNESS]) cylinder(d = DRUM_INNER_DIAMETER, h = DRUM_PULLEY_HEIGHT);
+    translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET, SIDE_THICKNESS]) cylinder(d = DRUM_INNER_DIAMETER, h = DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2 );
+}
+
+BOTTOM_WIDTH = DISP_FULL_WIDTH - 2 * SIDE_THICKNESS;
+BOTTOM_BORDER_THICKNESS = 8;
+BOTTOM_CARVE_LENGTH = SIDE_LENGTH - 30;
+BOTTOM_MOTOR_Y_OFFSET = SIDE_LENGTH - 28byj48_chassis_radius * 2;
+MOTOR_HOLDER_THICKNESS = 3;
+MOTOR_HOLDER_WIDTH = 15;
+MOTOR_HOLDER_MIDDLE_WIDTH = 30;
+
+MOTOR_HOLDER_ROUNDING = 4;
+MOTOR_HOLDER_HOLE_TOP_THICKNESS = 2;
+MOTOR_HOLDER_HOLE_SIDE_THICKNESS = 4;
+MOTOR_HOLDER_HEIGHT = 43;
+MOTOR_MOUNT_SPACING = 35;
+MOTOR_MOUNT_SCREW_DIAM = 3.5;
+MOTOR_SHAFT_COLLAR_DIAMETER = 28byj48_shaft_collar_radius * 2;
+MOTOR_HOLDER_MOUNT_WIDTH = 10;
+MOTOR_HOLDER_MOUNT_HEIGHT = MOTOR_MOUNT_SCREW_DIAM;
+
+/* FIXME ! */
+module motor_holder()
+{
+    difference() {
+        hull () {
+            cube([MOTOR_HOLDER_THICKNESS, MOTOR_HOLDER_WIDTH, MOTOR_HOLDER_HEIGHT- MOTOR_HOLDER_ROUNDING/2 ]); 
+            translate([0, MOTOR_HOLDER_ROUNDING/2, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_ROUNDING/2]) rotate ([0, 90, 0]) cylinder(d = MOTOR_HOLDER_ROUNDING , h = MOTOR_HOLDER_THICKNESS);
+            translate([0, MOTOR_HOLDER_WIDTH - MOTOR_HOLDER_ROUNDING/2, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_ROUNDING/2]) rotate ([0, 90, 0]) cylinder(d = MOTOR_HOLDER_ROUNDING , h = MOTOR_HOLDER_THICKNESS);
+               /* Crappy things... */
+    translate([0, MOTOR_HOLDER_MOUNT_HEIGHT/2 + MOTOR_HOLDER_HOLE_SIDE_THICKNESS - 28byj48_shaft_offset, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_MOUNT_HEIGHT/2 - MOTOR_HOLDER_HOLE_TOP_THICKNESS - MOTOR_MOUNT_SPACING/2])rotate([0, 90, 0])  cylinder(d = MOTOR_HOLDER_MOUNT_WIDTH +  MOTOR_HOLDER_HOLE_SIDE_THICKNESS, h = MOTOR_HOLDER_THICKNESS);
     
+    translate([MOTOR_HOLDER_THICKNESS/2, MOTOR_HOLDER_MOUNT_HEIGHT/2 + MOTOR_HOLDER_HOLE_SIDE_THICKNESS - 28byj48_shaft_offset, (MOTOR_HOLDER_MOUNT_WIDTH +  MOTOR_HOLDER_HOLE_SIDE_THICKNESS)/2]) cube([MOTOR_HOLDER_THICKNESS, MOTOR_HOLDER_MOUNT_WIDTH +  MOTOR_HOLDER_HOLE_SIDE_THICKNESS, MOTOR_HOLDER_MOUNT_WIDTH +  MOTOR_HOLDER_HOLE_SIDE_THICKNESS], center = true);
+        }
+        
+        /* Top hole for motor */
+        translate([0, MOTOR_HOLDER_MOUNT_HEIGHT/2 + MOTOR_HOLDER_HOLE_SIDE_THICKNESS, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_MOUNT_HEIGHT/2 - MOTOR_HOLDER_HOLE_TOP_THICKNESS]) #rotate([0, 90, 0]) hole(MOTOR_HOLDER_MOUNT_HEIGHT, MOTOR_HOLDER_WIDTH - MOTOR_HOLDER_MOUNT_HEIGHT - 2 * MOTOR_HOLDER_HOLE_SIDE_THICKNESS, MOTOR_HOLDER_THICKNESS);
+        /* Bottom hole for motor */
+        translate([0, MOTOR_HOLDER_MOUNT_HEIGHT/2 + MOTOR_HOLDER_HOLE_SIDE_THICKNESS, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_MOUNT_HEIGHT/2 - MOTOR_HOLDER_HOLE_TOP_THICKNESS - MOTOR_MOUNT_SPACING]) #rotate([0, 90, 0]) hole(MOTOR_HOLDER_MOUNT_HEIGHT, MOTOR_HOLDER_WIDTH - MOTOR_HOLDER_MOUNT_HEIGHT - 2 * MOTOR_HOLDER_HOLE_SIDE_THICKNESS, MOTOR_HOLDER_THICKNESS);
+        /* Hole for motor shaft */
+        translate([0, MOTOR_HOLDER_MOUNT_HEIGHT/2 + MOTOR_HOLDER_HOLE_SIDE_THICKNESS - 28byj48_shaft_offset, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_MOUNT_HEIGHT/2 - MOTOR_HOLDER_HOLE_TOP_THICKNESS - MOTOR_MOUNT_SPACING/2]) rotate([0, 90, 0]) hole(MOTOR_HOLDER_MOUNT_WIDTH, MOTOR_HOLDER_WIDTH - MOTOR_HOLDER_MOUNT_HEIGHT - 2 * MOTOR_HOLDER_HOLE_SIDE_THICKNESS, MOTOR_HOLDER_THICKNESS);
+    }
+    
+}
+
+module motor_holder_with_motor()
+{
+    motor_holder();
+    translate([MOTOR_HOLDER_THICKNESS, 0, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_MOUNT_HEIGHT/2 - MOTOR_HOLDER_HOLE_TOP_THICKNESS - MOTOR_MOUNT_SPACING/2]) rotate([180, 90, 0]) Stepper28BYJ48();
+}
+
+
+module bottom()
+{
+    difference() {
+        cube([BOTTOM_WIDTH, SIDE_LENGTH, BOTTOM_THICKNESS]);
+        /* Remove useless center part */
+        
+        translate([BOTTOM_BORDER_THICKNESS, BOTTOM_BORDER_THICKNESS, 0]) cube([BOTTOM_WIDTH - 2 * BOTTOM_BORDER_THICKNESS, BOTTOM_CARVE_LENGTH, BOTTOM_THICKNESS]);
+        /* Clips */
+        translate([BOTTOM_WIDTH + SIDE_THICKNESS, FRONT_CLIP_HEIGHT, 0]) rotate([0, 0, 90]) side_bottom_clips(TOLERANCY);
+        translate([-SIDE_THICKNESS, FRONT_CLIP_HEIGHT, 0]) rotate([0, 0, 90]) mirror([0, 1, 0]) side_bottom_clips(TOLERANCY);
+    }
+    /* Motor_holder */
+    translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor();
 }
 
 module split_flap()
@@ -274,6 +350,9 @@ module split_flap()
     translate([DISP_FULL_WIDTH/2, 0, 0]) rotate([90, 0, -90]) side();
     /* Left Side */
     mirror([1, 0, 0]) translate([DISP_FULL_WIDTH/2, 0, 0]) rotate([90, 0, -90]) right_side();
+    
+    /* Bottom */
+    translate([BOTTOM_WIDTH/2, 0, 0]) rotate([0, 0, 180]) bottom();
 }
 
 split_flap();
