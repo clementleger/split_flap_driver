@@ -2,12 +2,20 @@ include <prism.scad>
 include <parametric_pulley.scad>
 include <28byj-48.scad>
 
+/* General tolenracy (should be upadate according to 3D printer) */
 TOLERANCY = 0.2;
+/* Tolerancy for drum axis */
+AXIS_TOLERANCY = 0.3;
 
+/* Width of flaps */
 FLAP_WIDTH = 54;
+/* Height of flaps */
 FLAP_HEIGHT = 85.6;
+/* THickness of flaps */
 FLAP_THICKNESS = 0.380;
+/* Flap drum width */
 FLAP_DRUM_WIDTH = FLAP_WIDTH;
+/* Corner around flaps */
 FLAP_CORNER_RADIUS = 3;
 
 FLAP_SIDE_CUT_HEIGHT = 8;
@@ -18,36 +26,62 @@ FRONT_BOTTOM_HEIGHT = 40;
 FRONT_BOTTOM_OPEN_HEIGHT = 30;
 FRONT_TOP_HEIGHT = 20;
 
+/* Number of flaps on drum */
 DRUM_FLAPS_COUNT = 40;
+/* Holes for flaps */
 DRUM_FLAPS_HOLE_DIAMETER = 2;
 assert(DRUM_FLAPS_HOLE_DIAMETER > FLAP_CUT_OFFSET);
-DRUM_FLAPS_HOLE_OFFSET = 0.5;
+/*Diameter of flaps hole */
+DRUM_FLAPS_HOLE_OFFSET = 0.8;
+/* Inner diameter of drum (ie tube connecting both ends) */
 DRUM_INNER_DIAMETER = 30;
+/* Outer diameter of drum (ie where the flaps insert) */
 DRUM_OUTER_DIAMETER = 40;
+/* Thickness of side of drum (ie where the flaps insert) */
 DRUM_SIDE_THICKNESS = 2;
+
+/* Radius of flaps where the flaps are inserted */
 DRUM_FLAP_RADIUS = DRUM_OUTER_DIAMETER/2 - DRUM_FLAPS_HOLE_DIAMETER/2 - DRUM_FLAPS_HOLE_OFFSET;
 
+/* Depth */
 DRUM_AXIS_OVERLAP = 1;
 assert(DRUM_AXIS_OVERLAP < DRUM_SIDE_THICKNESS);
-/* Add some slack around cards */
-DRUM_AXIS_EXTRA_WIDTH = 1;
+/* Slack around cards (normally unnecessary) */
+DRUM_AXIS_EXTRA_WIDTH = 0;
+
 DRUM_AXIS_HEIGHT = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH - DRUM_SIDE_THICKNESS + DRUM_AXIS_OVERLAP;
+/* Thickness if tube connecting both ends both ends of drum */
 DRUM_AXIS_THICKNESS = 0.8;
 
-/* Center which rolls around the axis */
+
+/* Diameter of rotation axis */
 DRUM_CENTER_DIAMETER = 8;
+/* Additionnal height of axis*/
 DRUM_CENTER_HEIGHT = 10;
 DRUM_CENTER_THICKNESS = 3;
 
+/* Plug width */
 DRUM_PLUG_WIDTH = 3;
+/* Plug height */
 DRUM_PLUG_HEIGHT = 6;
+/* Plug thickness */
 DRUM_PLUG_THICKNESS = 2;
+/* Plug inside drum to connect with other end of drum */
+/* This will be minus 1 to allow an exact fitting with other side */
 DRUM_PLUG_COUNT = 4;
 
+/* Number of tooth of pulley */
 DRUM_PULLEY_TEETH = 40;
+/* Thickness of pulley */
 DRUM_PULLEY_HEIGHT = 3.5;
 
+/* Total width of drum */
 DRUM_WIDTH = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH + DRUM_PLUG_WIDTH;
+
+/* Magnet (for hall effect sensor) diameter */
+DRUM_MAGNET_DIAMETER = 3;
+/* Magnet height */
+DRUM_MAGNET_HEIGHT = 3;
 
 $fn = 50;
 
@@ -109,11 +143,21 @@ module drum_side(tolerancy = 0)
         cylinder(d = DRUM_INNER_DIAMETER - DRUM_AXIS_THICKNESS*2 - tolerancy/2, h = DRUM_AXIS_HEIGHT);
     }
     /* Little plugs on top of axis */
-    for (hole=[1:DRUM_PLUG_COUNT])
+    for (hole=[1:DRUM_PLUG_COUNT - 1])
             rotate([0, 0, hole * (360/DRUM_PLUG_COUNT)]) translate([0, -DRUM_INNER_DIAMETER/2 + DRUM_AXIS_THICKNESS, DRUM_AXIS_HEIGHT]) drum_plug(tolerancy);
 }
 
-module drum_with_belt_side()
+module drum_with_magnet()
+{
+    difference() {
+        drum_side();
+        
+        /* Magnet hole */
+        translate([DRUM_INNER_DIAMETER/2 - DRUM_MAGNET_DIAMETER/2 - DRUM_AXIS_THICKNESS, 0, 0]) cylinder(d = DRUM_MAGNET_DIAMETER, h = DRUM_MAGNET_HEIGHT);
+    }
+}
+
+module drum_with_belt()
 {
     difference() {
         translate([0, 0, FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH - DRUM_SIDE_THICKNESS]) {
@@ -156,22 +200,27 @@ module flaps()
 module drum()
 {
     color("grey") drum_side();
-    color("grey") drum_with_belt_side();
+    color("grey") drum_with_belt();
     color("white") flaps();
 }
 
-DISP_BOTTOM_SIZE = 15;
-DISP_TOP_SIZE = 15;
+/* Size of bottom border */
+DISP_BOTTOM_SIZE = 12;
+/* Size of top border */
+DISP_TOP_SIZE = 12;
 /* Add some slack to sides */
 DISP_BORDER_ADJUST = 0.8;
 DISP_BORDER_SIZE = DRUM_PULLEY_HEIGHT + DISP_BORDER_ADJUST;
 assert(DISP_BORDER_SIZE >= DRUM_PULLEY_HEIGHT);
 
+/* Thickness of front part */
 FRONT_THICKNESS = 3;
 
 /* Window inside front display */
 DISP_WINDOW_HEIGHT = FLAP_HEIGHT + DRUM_OUTER_DIAMETER / 3;
-DISP_WINDOW_WIDTH = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH + TOLERANCY;
+/* Add some slack around flaps */
+DISP_WINDOW_EXTRA_WIDTH = 1.6;
+DISP_WINDOW_WIDTH = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH;
 
 SIDE_THICKNESS = 3;
 
@@ -179,8 +228,8 @@ DISP_TOTAL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
 DISP_FULL_WIDTH = DISP_WINDOW_WIDTH + 2 * DISP_BORDER_SIZE + 2 * SIDE_THICKNESS;
 DISP_FULL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
 
-FRONT_CLIP_HEIGHT = 3;
-FRONT_CLIP_TOP_WIDTH = 10;
+FRONT_CLIP_HEIGHT = 2;
+FRONT_CLIP_TOP_WIDTH = 9;
 FRONT_CLIP_BOTTOM_WIDTH = 8;
 FRONT_CLIP_COUNT = 5;
 
@@ -194,23 +243,24 @@ module front()
     color("salmon")
     difference() {
         cube([DISP_FULL_WIDTH, DISP_TOTAL_HEIGHT, FRONT_THICKNESS]);
-        translate([DISP_BORDER_SIZE + SIDE_THICKNESS, DISP_BOTTOM_SIZE, 0]) cube([DISP_WINDOW_WIDTH, DISP_WINDOW_HEIGHT, FRONT_THICKNESS]); 
+        /* Window */
+        translate([DISP_BORDER_SIZE + SIDE_THICKNESS - DISP_WINDOW_EXTRA_WIDTH/2, DISP_BOTTOM_SIZE, 0]) cube([DISP_WINDOW_WIDTH + DISP_WINDOW_EXTRA_WIDTH, DISP_WINDOW_HEIGHT, FRONT_THICKNESS]); 
     }
     /* Side clip parts */
     rotate([90, 0, 90]) front_clips();
     translate([DISP_FULL_WIDTH - FRONT_THICKNESS, 0, 0]) rotate([90, 0, 90]) front_clips();
 }
 
-//front();
-
 DRUM_X_OFFSET = -DRUM_AXIS_EXTRA_WIDTH / 2 - FLAP_WIDTH/2;
 DRUM_Y_OFFSET = - DRUM_FLAP_RADIUS;
-FLAP_Z_ADJUST = 2;
+FLAP_Z_ADJUST = 1;
 DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - FLAP_HEIGHT/2 - FLAP_Z_ADJUST;
 
 SIDE_END_ROUND = 10;
 SIDE_BOTTOM_CLIP_COUNT = 3;
-SIDE_BOTTOM_CLIP_HEIGHT = 3;
+SIDE_BOTTOM_CLIP_HEIGHT = 2;
+SIDE_BOTTOM_CLIP_TOP_WIDTH = 9;
+SIDE_BOTTOM_CLIP_BOTTOM_WIDTH = 8;
 SIDE_DRUM_AXIS_LENGTH = 15;
 
 SIDE_BORDER_THICKNESS = 8;
@@ -251,14 +301,14 @@ module side_full()
                 translate([-FRONT_THICKNESS, 0, SIDE_THICKNESS]) rotate([180, 0, 90]) front_clips(TOLERANCY);
             }
             /* Axis for drum */
-            translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET]) cylinder(d = DRUM_CENTER_DIAMETER - TOLERANCY, h = SIDE_DRUM_AXIS_LENGTH);
+            translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET]) cylinder(d = DRUM_CENTER_DIAMETER - AXIS_TOLERANCY, h = SIDE_DRUM_AXIS_LENGTH);
         }
     }
 }
 
 module side_bottom_clips(tolerancy = 0)
 {
-    clipsable_male_part(SIDE_LENGTH - FRONT_CLIP_HEIGHT + tolerancy, SIDE_BOTTOM_CLIP_HEIGHT + tolerancy, BOTTOM_THICKNESS + tolerancy, SIDE_BOTTOM_CLIP_COUNT, SIDE_BOTTOM_CLIP_HEIGHT);
+    clipsable_male_part(SIDE_LENGTH - FRONT_CLIP_HEIGHT + tolerancy, SIDE_THICKNESS, BOTTOM_THICKNESS, SIDE_BOTTOM_CLIP_COUNT, SIDE_BOTTOM_CLIP_HEIGHT, SIDE_BOTTOM_CLIP_BOTTOM_WIDTH, SIDE_BOTTOM_CLIP_TOP_WIDTH);
 }
 
 module side()
@@ -267,13 +317,32 @@ module side()
     translate([FRONT_CLIP_HEIGHT, BOTTOM_THICKNESS, 0]) rotate([90, 0, 0]) side_bottom_clips();
 }
 
-//side();
+/* Width of hall effect sensor */
+HALL_EFFECT_SENSOR_WIDTH = 5;
+/* Diameter of hall effect sensor pcb screw */
+HALL_EFFECT_SENSOR_HOLE_DIAM = 3;
+HALL_EFFECT_SENSOR_HOLE_HEIGHT = 10;
+HALL_EFFECT_SENSOR_SUPPORT_WIDTH = 10;
+HALL_EFFECT_SENSOR_SUPPORT_HEIGHT = 16;
+
 
 module right_side()
 {
     side();
-    /* Axis for drum */
-    translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET, SIDE_THICKNESS]) cylinder(d = DRUM_INNER_DIAMETER, h = DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2 );
+
+    difference() {
+        /* Axis for drum */
+        translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET, SIDE_THICKNESS]) cylinder(d = DRUM_INNER_DIAMETER, h = DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2 );
+        
+        /* Hole for hall effect sensor */
+        translate([-DRUM_Y_OFFSET - HALL_EFFECT_SENSOR_WIDTH/2, DRUM_Z_OFFSET - (DRUM_INNER_DIAMETER/2 - DRUM_CENTER_DIAMETER/2) - DRUM_CENTER_DIAMETER/2, SIDE_THICKNESS]) #cube([HALL_EFFECT_SENSOR_WIDTH, DRUM_INNER_DIAMETER/2 - DRUM_CENTER_DIAMETER/2, DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2]);
+    }
+    /* Support for hall effect sensor PCB */
+    
+    translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_SUPPORT_WIDTH + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0]) difference() {
+        hole(HALL_EFFECT_SENSOR_SUPPORT_WIDTH, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+        hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+    }
 }
 
 BOTTOM_WIDTH = DISP_FULL_WIDTH - 2 * SIDE_THICKNESS;
@@ -318,14 +387,16 @@ module motor_holder()
     
 }
 
-module motor_holder_with_motor()
+module motor_holder_with_motor(with_stepper)
 {
     motor_holder();
-    translate([MOTOR_HOLDER_THICKNESS, 0, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_MOUNT_HEIGHT/2 - MOTOR_HOLDER_HOLE_TOP_THICKNESS - MOTOR_MOUNT_SPACING/2]) rotate([180, 90, 0]) Stepper28BYJ48();
+    if (with_stepper == 1) {
+        translate([MOTOR_HOLDER_THICKNESS, 0, MOTOR_HOLDER_HEIGHT - MOTOR_HOLDER_MOUNT_HEIGHT/2 - MOTOR_HOLDER_HOLE_TOP_THICKNESS - MOTOR_MOUNT_SPACING/2]) rotate([180, 90, 0]) Stepper28BYJ48();
+    }
 }
 
 
-module bottom()
+module bottom(with_stepper = 1)
 {
     difference() {
         cube([BOTTOM_WIDTH, SIDE_LENGTH, BOTTOM_THICKNESS]);
@@ -337,7 +408,7 @@ module bottom()
         translate([-SIDE_THICKNESS, FRONT_CLIP_HEIGHT, 0]) rotate([0, 0, 90]) mirror([0, 1, 0]) side_bottom_clips(TOLERANCY);
     }
     /* Motor_holder */
-    translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS + TOLERANCY, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor();
+    translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS + TOLERANCY, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor(with_stepper);
 }
 
 module split_flap()
@@ -348,18 +419,35 @@ module split_flap()
     translate([-DISP_FULL_WIDTH/2, FRONT_THICKNESS, 0]) rotate([90, 0, 0]) front();
     /* Left Side */
     translate([DISP_FULL_WIDTH/2, 0, 0]) rotate([90, 0, -90]) side();
-    /* Left Side */
+    /* Right Side */
     mirror([1, 0, 0]) translate([DISP_FULL_WIDTH/2, 0, 0]) rotate([90, 0, -90]) right_side();
     
     /* Bottom */
     translate([BOTTOM_WIDTH/2, 0, 0]) rotate([0, 0, 180]) bottom();
 }
 
-//split_flap();
 
-//bottom();
-//right_side();
-//side();
-//front();
-drum_with_belt_side();
-drum_side();
+GENERATE="right_side";
+
+if (GENERATE == undef) {
+    split_flap();
+}
+
+if (GENERATE == "bottom") {
+    bottom(0);
+}
+if (GENERATE == "right_side") {
+    mirror([1, 0, 0]) right_side();
+}
+if (GENERATE == "side") {
+    side();
+}
+if (GENERATE == "front") {
+    front();
+}
+if (GENERATE == "drum_with_belt") {
+    drum_with_belt();
+}
+if (GENERATE == "drum_with_magnet") {
+    drum_with_magnet();
+}
