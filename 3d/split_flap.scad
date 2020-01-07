@@ -19,7 +19,7 @@ FLAP_DRUM_WIDTH = FLAP_WIDTH;
 FLAP_CORNER_RADIUS = 3;
 
 FLAP_SIDE_CUT_HEIGHT = 8;
-FLAP_SIDE_CUT_WIDTH = 4;
+FLAP_SIDE_CUT_WIDTH = 1.5;
 FLAP_CUT_OFFSET = 1;
 
 FRONT_BOTTOM_HEIGHT = 40;
@@ -169,17 +169,22 @@ module drum_with_belt()
     }
 }
 
+module cube_rounded(width, height, thickness)
+{
+    cube([width, height, thickness]);
+    translate([0, height, 0]) cylinder(r = width, h = thickness ); 
+}
+
 module flap()
 {
-    rotate([0, -90, 0]) 
     difference() {
         hull() {
             cube([FLAP_WIDTH, FLAP_HEIGHT/2 - FLAP_CORNER_RADIUS, FLAP_THICKNESS]);
             translate([FLAP_CORNER_RADIUS, FLAP_HEIGHT/2 - FLAP_CORNER_RADIUS, 0]) cylinder(r = FLAP_CORNER_RADIUS, h = FLAP_THICKNESS);
             translate([FLAP_WIDTH - FLAP_CORNER_RADIUS, FLAP_HEIGHT/2 - FLAP_CORNER_RADIUS, 0]) cylinder(r = FLAP_CORNER_RADIUS, h = FLAP_THICKNESS);
         }
-        translate([FLAP_WIDTH, FLAP_SIDE_CUT_WIDTH/2 + FLAP_CUT_OFFSET, 0]) hole(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,FLAP_THICKNESS);
-        translate([0, FLAP_SIDE_CUT_WIDTH/2 + FLAP_CUT_OFFSET, 0]) hole(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,FLAP_THICKNESS);
+        translate([FLAP_WIDTH, FLAP_CUT_OFFSET, 0]) mirror([1, 0, 0]) cube_rounded(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,FLAP_THICKNESS);
+        translate([0, FLAP_CUT_OFFSET, 0]) cube_rounded(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,FLAP_THICKNESS);
     }
 }
 
@@ -189,10 +194,12 @@ module flaps()
 {
     /* Flaps hanging in the bottom of the drum */
     for (flap=[0:HANGING_FLAPS_COUNT-1]) {
-        translate([DRUM_FLAP_RADIUS * sin(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_FLAP_RADIUS * cos(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_AXIS_EXTRA_WIDTH/2]) rotate([0, 0, -90]) flap();
+        translate([DRUM_FLAP_RADIUS * sin(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_FLAP_RADIUS * cos(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_AXIS_EXTRA_WIDTH/2]) rotate([0, 0, -90]) 
+    rotate([0, -90, 0])  flap();
     }
     for (flap=[HANGING_FLAPS_COUNT:DRUM_FLAPS_COUNT - 1]) {
-        translate([DRUM_FLAP_RADIUS * sin(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_FLAP_RADIUS * cos(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_AXIS_EXTRA_WIDTH/2]) rotate([0, 0, - (360 - 90) - flap * (360 / (DRUM_FLAPS_COUNT - 1))]) flap();
+        translate([DRUM_FLAP_RADIUS * sin(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_FLAP_RADIUS * cos(flap * (360 / DRUM_FLAPS_COUNT)), DRUM_AXIS_EXTRA_WIDTH/2]) rotate([0, 0, - (360 - 90) - flap * (360 / (DRUM_FLAPS_COUNT - 1))]) 
+    rotate([0, -90, 0])  flap();
     }
     
 }
@@ -448,3 +455,8 @@ if (GENERATE == "drum_with_belt") {
 if (GENERATE == "drum_with_magnet") {
     drum_with_magnet();
 }
+
+if (GENERATE == "flap") {
+   projection(cut = false)  flap();
+}
+
