@@ -71,7 +71,7 @@ DRUM_PLUG_THICKNESS = 2;
 DRUM_PLUG_COUNT = 4;
 
 /* Number of tooth of pulley */
-DRUM_PULLEY_TEETH = 40;
+DRUM_PULLEY_TEETH = 20;
 /* Thickness of pulley */
 DRUM_PULLEY_HEIGHT = 3.5;
 
@@ -425,9 +425,6 @@ module split_flap()
     /* Bottom */
     translate([BOTTOM_WIDTH/2, 0, 0]) rotate([0, 0, 180]) bottom();
 }
-
-
-GENERATE="right_side";
 
 if (GENERATE == undef) {
     split_flap();
