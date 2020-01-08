@@ -223,10 +223,11 @@ assert(DISP_BORDER_SIZE >= DRUM_PULLEY_HEIGHT);
 /* Thickness of front part */
 FRONT_THICKNESS = 3;
 
-/* Window inside front display */
+/* Window height inside front display */
 DISP_WINDOW_HEIGHT = FLAP_HEIGHT + DRUM_OUTER_DIAMETER / 3;
 /* Add some slack around flaps */
 DISP_WINDOW_EXTRA_WIDTH = 1.6;
+/* Window width inside front display */
 DISP_WINDOW_WIDTH = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH;
 
 SIDE_THICKNESS = 3;
@@ -235,7 +236,8 @@ DISP_TOTAL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
 DISP_FULL_WIDTH = DISP_WINDOW_WIDTH + 2 * DISP_BORDER_SIZE + 2 * SIDE_THICKNESS;
 DISP_FULL_HEIGHT = DISP_WINDOW_HEIGHT + DISP_BOTTOM_SIZE + DISP_TOP_SIZE;
 
-FRONT_CLIP_HEIGHT = 2;
+/* Front clip parameters */
+FRONT_CLIP_HEIGHT = 3;
 FRONT_CLIP_TOP_WIDTH = 9;
 FRONT_CLIP_BOTTOM_WIDTH = 8;
 FRONT_CLIP_COUNT = 5;
@@ -263,39 +265,54 @@ DRUM_Y_OFFSET = - DRUM_FLAP_RADIUS;
 FLAP_Z_ADJUST = 1;
 DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - FLAP_HEIGHT/2 - FLAP_Z_ADJUST;
 
-SIDE_END_ROUND = 10;
+SIDE_END_ROUND = 15;
 SIDE_BOTTOM_CLIP_COUNT = 3;
 SIDE_BOTTOM_CLIP_HEIGHT = 2;
 SIDE_BOTTOM_CLIP_TOP_WIDTH = 9;
 SIDE_BOTTOM_CLIP_BOTTOM_WIDTH = 8;
 SIDE_DRUM_AXIS_LENGTH = 15;
 
-SIDE_BORDER_THICKNESS = 8;
+SIDE_BORDER_THICKNESS = 7;
 
 SIDE_LENGTH = 80;
 
 BOTTOM_THICKNESS = 3;
 
+module side_format_2d()
+{
+    hull() {
+        translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_END_ROUND/2]) circle(d = SIDE_END_ROUND);
+        square([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
+        translate([SIDE_LENGTH - SIDE_END_ROUND/2, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]) circle(d = SIDE_END_ROUND);
+        square([SIDE_LENGTH, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]);
+    }
+}
+
+
+module side_format_2d_empty_part()
+{
+    translate([- SIDE_BORDER_THICKNESS - FRONT_THICKNESS, - SIDE_BORDER_THICKNESS - BOTTOM_THICKNESS])
+    difference() {
+        side_format_2d();
+        square([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
+        square([SIDE_LENGTH, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]);
+    }
+}
+
 module side_base()
 {
-        linear_extrude(SIDE_THICKNESS) {
-            difference() {
-                /* Outer shell */
-                hull() {
-                    translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET]) circle(d = DRUM_INNER_DIAMETER);
-                    square([-DRUM_Y_OFFSET, DRUM_Z_OFFSET + DRUM_INNER_DIAMETER/2]);
-                    translate([SIDE_LENGTH -  SIDE_END_ROUND/2, SIDE_END_ROUND/2]) circle(d = SIDE_END_ROUND);
-                    square([SIDE_LENGTH - SIDE_END_ROUND/2, SIDE_END_ROUND/2]);
-                }
-                /* Inner removed part */
-                hull() {
-                    translate([-DRUM_Y_OFFSET + SIDE_BORDER_THICKNESS + SIDE_END_ROUND/2, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER]) circle(d = DRUM_INNER_DIAMETER);
-                    translate([SIDE_BORDER_THICKNESS, SIDE_BORDER_THICKNESS])  square([0.1, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER + DRUM_INNER_DIAMETER/2 - SIDE_BORDER_THICKNESS]);
-                    #translate([SIDE_BORDER_THICKNESS, SIDE_BORDER_THICKNESS]) square([SIDE_LENGTH - SIDE_BORDER_THICKNESS * 2, 0.1]);
-                }
-                
-            }
+    REDUCE_RATIO = (SIDE_LENGTH - SIDE_BORDER_THICKNESS) / SIDE_LENGTH;
+    linear_extrude(SIDE_THICKNESS) {
+        difference() {
+            side_format_2d();
+            translate([SIDE_BORDER_THICKNESS + FRONT_THICKNESS, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]) resize([REDUCE_RATIO * (SIDE_LENGTH - FRONT_THICKNESS - SIDE_BORDER_THICKNESS), REDUCE_RATIO * (DISP_FULL_HEIGHT - SIDE_BORDER_THICKNESS - BOTTOM_THICKNESS)]) side_format_2d_empty_part();
         }
+        /* Middle part to support axis */
+        intersection() {
+            side_format_2d();
+            translate([0, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2]) square([SIDE_LENGTH, DRUM_INNER_DIAMETER]);
+        }
+  }
 }
 
 module side_full()
@@ -328,10 +345,8 @@ module side()
 HALL_EFFECT_SENSOR_WIDTH = 5;
 /* Diameter of hall effect sensor pcb screw */
 HALL_EFFECT_SENSOR_HOLE_DIAM = 3;
-HALL_EFFECT_SENSOR_HOLE_HEIGHT = 10;
+HALL_EFFECT_SENSOR_HOLE_HEIGHT = 15;
 HALL_EFFECT_SENSOR_SUPPORT_WIDTH = 10;
-HALL_EFFECT_SENSOR_SUPPORT_HEIGHT = 16;
-
 
 module right_side()
 {
@@ -346,7 +361,7 @@ module right_side()
     }
     /* Support for hall effect sensor PCB */
     
-    translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_SUPPORT_WIDTH + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0]) difference() {
+    translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0]) difference() {
         hole(HALL_EFFECT_SENSOR_SUPPORT_WIDTH, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
         hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
     }
@@ -433,6 +448,7 @@ module split_flap()
     translate([BOTTOM_WIDTH/2, 0, 0]) rotate([0, 0, 180]) bottom();
 }
 
+GENERATE = "left_side";
 if (GENERATE == undef) {
     split_flap();
 }
@@ -443,7 +459,7 @@ if (GENERATE == "bottom") {
 if (GENERATE == "right_side") {
     mirror([1, 0, 0]) right_side();
 }
-if (GENERATE == "side") {
+if (GENERATE == "left_side") {
     side();
 }
 if (GENERATE == "front") {
