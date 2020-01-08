@@ -278,6 +278,8 @@ SIDE_LENGTH = 80;
 
 BOTTOM_THICKNESS = 3;
 
+SIDE_ANGLE = -45;
+
 module side_format_2d()
 {
     hull() {
@@ -312,7 +314,12 @@ module side_base()
             side_format_2d();
             translate([0, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2]) square([SIDE_LENGTH, DRUM_INNER_DIAMETER]);
         }
-  }
+        /* Transverse support */
+        intersection() {
+            side_format_2d();
+            translate([0, SIDE_BORDER_THICKNESS/2]) rotate([0, 0, SIDE_ANGLE]) square([SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
+        }
+    }
 }
 
 module side_full()
@@ -448,7 +455,6 @@ module split_flap()
     translate([BOTTOM_WIDTH/2, 0, 0]) rotate([0, 0, 180]) bottom();
 }
 
-GENERATE = "left_side";
 if (GENERATE == undef) {
     split_flap();
 }
