@@ -31,20 +31,20 @@ DRUM_FLAPS_COUNT = 40;
 /* Holes for flaps */
 DRUM_FLAPS_HOLE_DIAMETER = 2;
 assert(DRUM_FLAPS_HOLE_DIAMETER > FLAP_CUT_OFFSET);
-/*Diameter of flaps hole */
-DRUM_FLAPS_HOLE_OFFSET = 0.8;
+/* Offset of flaps hole  from drum side */
+DRUM_FLAPS_HOLE_OFFSET = 1;
 /* Inner diameter of drum (ie tube connecting both ends) */
 DRUM_INNER_DIAMETER = 30;
 /* Outer diameter of drum (ie where the flaps insert) */
-DRUM_OUTER_DIAMETER = 40;
+DRUM_OUTER_DIAMETER = 42;
 /* Thickness of side of drum (ie where the flaps insert) */
-DRUM_SIDE_THICKNESS = 2;
+DRUM_SIDE_THICKNESS = 2.5;
 
 /* Radius of flaps where the flaps are inserted */
 DRUM_FLAP_RADIUS = DRUM_OUTER_DIAMETER/2 - DRUM_FLAPS_HOLE_DIAMETER/2 - DRUM_FLAPS_HOLE_OFFSET;
 
 /* Depth */
-DRUM_AXIS_OVERLAP = 1;
+DRUM_AXIS_OVERLAP = 1.6;
 assert(DRUM_AXIS_OVERLAP < DRUM_SIDE_THICKNESS);
 /* Slack around cards (normally unnecessary) */
 DRUM_AXIS_EXTRA_WIDTH = 0;
@@ -457,28 +457,27 @@ module split_flap()
 
 if (GENERATE == undef) {
     split_flap();
-}
+} else  {
+    if (GENERATE == "bottom") {
+        bottom(0);
+    }
+    if (GENERATE == "right_side") {
+        mirror([1, 0, 0]) right_side();
+    }
+    if (GENERATE == "left_side") {
+        side();
+    }
+    if (GENERATE == "front") {
+        front();
+    }
+    if (GENERATE == "drum_with_belt") {
+        drum_with_belt();
+    }
+    if (GENERATE == "drum_with_magnet") {
+        drum_with_magnet();
+    }
 
-if (GENERATE == "bottom") {
-    bottom(0);
+    if (GENERATE == "flap") {
+       projection(cut = false)  flap();
+    }
 }
-if (GENERATE == "right_side") {
-    mirror([1, 0, 0]) right_side();
-}
-if (GENERATE == "left_side") {
-    side();
-}
-if (GENERATE == "front") {
-    front();
-}
-if (GENERATE == "drum_with_belt") {
-    drum_with_belt();
-}
-if (GENERATE == "drum_with_magnet") {
-    drum_with_magnet();
-}
-
-if (GENERATE == "flap") {
-   projection(cut = false)  flap();
-}
-
