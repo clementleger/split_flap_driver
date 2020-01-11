@@ -1,8 +1,8 @@
-3d_parts = bottom right_side left_side front drum_with_magnet drum_with_belt
+3d_parts = bottom right_side left_side front drum_with_magnet drum_with_belt card_jig
 stl_output_dir = stl/
 stl_parts = $(addprefix $(stl_output_dir),$(addsuffix .stl,$(3d_parts)))
 
-2d_parts = flap
+2d_parts = card_cut
 svg_output_dir = svg/
 svg_parts = $(addprefix $(svg_output_dir),$(addsuffix .svg,$(2d_parts)))
 

@@ -8,13 +8,13 @@ TOLERANCY = 0.2;
 AXIS_TOLERANCY = 0.3;
 
 /* Width of flaps */
-FLAP_WIDTH = 54;
+CARD_WIDTH = 54;
 /* Height of flaps */
-FLAP_HEIGHT = 85.6;
+CARD_HEIGHT = 85.6;
 /* THickness of flaps */
-FLAP_THICKNESS = 0.380;
+CARD_THICKNESS = 0.380;
 /* Flap drum width */
-FLAP_DRUM_WIDTH = FLAP_WIDTH;
+FLAP_DRUM_WIDTH = CARD_WIDTH;
 /* Corner around flaps */
 FLAP_CORNER_RADIUS = 3;
 
@@ -43,7 +43,7 @@ DRUM_FLAP_RADIUS = DRUM_OUTER_DIAMETER/2 - DRUM_FLAPS_HOLE_DIAMETER/2 - DRUM_FLA
 
 FLAP_SIDE_CUT_HEIGHT = 8;
 FLAP_SIDE_CUT_WIDTH = DRUM_SIDE_THICKNESS + 0.2;
-FLAP_CUT_OFFSET = 1;
+FLAP_CUT_OFFSET = DRUM_FLAPS_HOLE_DIAMETER - 0.8;
 
 /* Depth */
 DRUM_AXIS_OVERLAP = 1.6;
@@ -51,7 +51,7 @@ assert(DRUM_AXIS_OVERLAP < DRUM_SIDE_THICKNESS);
 /* Slack around cards (normally unnecessary) */
 DRUM_AXIS_EXTRA_WIDTH = 0;
 
-DRUM_AXIS_HEIGHT = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH - DRUM_SIDE_THICKNESS + DRUM_AXIS_OVERLAP;
+DRUM_AXIS_HEIGHT = CARD_WIDTH + DRUM_AXIS_EXTRA_WIDTH - DRUM_SIDE_THICKNESS + DRUM_AXIS_OVERLAP;
 /* Thickness if tube connecting both ends both ends of drum */
 DRUM_AXIS_THICKNESS = 0.8;
 
@@ -78,7 +78,7 @@ DRUM_PULLEY_TEETH = 20;
 DRUM_PULLEY_HEIGHT = 3.5;
 
 /* Total width of drum */
-DRUM_WIDTH = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH + DRUM_PLUG_WIDTH;
+DRUM_WIDTH = CARD_WIDTH + DRUM_AXIS_EXTRA_WIDTH + DRUM_PLUG_WIDTH;
 
 /* Magnet (for hall effect sensor) diameter */
 DRUM_MAGNET_DIAMETER = 3;
@@ -162,7 +162,7 @@ module drum_with_magnet()
 module drum_with_belt()
 {
     difference() {
-        translate([0, 0, FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH - DRUM_SIDE_THICKNESS]) {
+        translate([0, 0, CARD_WIDTH + DRUM_AXIS_EXTRA_WIDTH - DRUM_SIDE_THICKNESS]) {
             drum_end_with_holes();
             translate([0, 0, DRUM_SIDE_THICKNESS]) pulley(teeth = DRUM_PULLEY_TEETH, profile = 12, motor_shaft = DRUM_CENTER_DIAMETER, pulley_t_ht = DRUM_PULLEY_HEIGHT);
         }
@@ -181,12 +181,12 @@ module flap()
 {
     difference() {
         hull() {
-            cube([FLAP_WIDTH, FLAP_HEIGHT/2 - FLAP_CORNER_RADIUS, FLAP_THICKNESS]);
-            translate([FLAP_CORNER_RADIUS, FLAP_HEIGHT/2 - FLAP_CORNER_RADIUS, 0]) cylinder(r = FLAP_CORNER_RADIUS, h = FLAP_THICKNESS);
-            translate([FLAP_WIDTH - FLAP_CORNER_RADIUS, FLAP_HEIGHT/2 - FLAP_CORNER_RADIUS, 0]) cylinder(r = FLAP_CORNER_RADIUS, h = FLAP_THICKNESS);
+            cube([CARD_WIDTH, CARD_HEIGHT/2 - FLAP_CORNER_RADIUS, CARD_THICKNESS]);
+            translate([FLAP_CORNER_RADIUS, CARD_HEIGHT/2 - FLAP_CORNER_RADIUS, 0]) cylinder(r = FLAP_CORNER_RADIUS, h = CARD_THICKNESS);
+            translate([CARD_WIDTH - FLAP_CORNER_RADIUS, CARD_HEIGHT/2 - FLAP_CORNER_RADIUS, 0]) cylinder(r = FLAP_CORNER_RADIUS, h = CARD_THICKNESS);
         }
-        translate([FLAP_WIDTH, FLAP_CUT_OFFSET, 0]) mirror([1, 0, 0]) cube_rounded(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,FLAP_THICKNESS);
-        translate([0, FLAP_CUT_OFFSET, 0]) cube_rounded(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,FLAP_THICKNESS);
+        translate([CARD_WIDTH, FLAP_CUT_OFFSET, 0]) mirror([1, 0, 0]) cube_rounded(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,CARD_THICKNESS);
+        translate([0, FLAP_CUT_OFFSET, 0]) cube_rounded(FLAP_SIDE_CUT_WIDTH,FLAP_SIDE_CUT_HEIGHT,CARD_THICKNESS);
     }
 }
 
@@ -226,11 +226,11 @@ assert(DISP_BORDER_SIZE >= DRUM_PULLEY_HEIGHT);
 FRONT_THICKNESS = 3;
 
 /* Window height inside front display */
-DISP_WINDOW_HEIGHT = FLAP_HEIGHT + DRUM_OUTER_DIAMETER / 2;
+DISP_WINDOW_HEIGHT = CARD_HEIGHT + DRUM_OUTER_DIAMETER / 2;
 /* Add some slack around flaps */
 DISP_WINDOW_EXTRA_WIDTH = 1.6;
 /* Window width inside front display */
-DISP_WINDOW_WIDTH = FLAP_WIDTH + DRUM_AXIS_EXTRA_WIDTH;
+DISP_WINDOW_WIDTH = CARD_WIDTH + DRUM_AXIS_EXTRA_WIDTH;
 
 SIDE_THICKNESS = 3;
 
@@ -262,10 +262,10 @@ module front()
     translate([DISP_FULL_WIDTH - FRONT_THICKNESS, 0, 0]) rotate([90, 0, 90]) front_clips();
 }
 
-DRUM_X_OFFSET = -DRUM_AXIS_EXTRA_WIDTH / 2 - FLAP_WIDTH/2;
+DRUM_X_OFFSET = -DRUM_AXIS_EXTRA_WIDTH / 2 - CARD_WIDTH/2;
 DRUM_Y_OFFSET = - DRUM_FLAP_RADIUS;
 FLAP_Z_ADJUST = 0.5;
-DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - FLAP_HEIGHT/2 - FLAP_Z_ADJUST;
+DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - CARD_HEIGHT/2 - FLAP_Z_ADJUST;
 
 SIDE_END_ROUND = 15;
 SIDE_BOTTOM_CLIP_COUNT = 3;
@@ -274,53 +274,45 @@ SIDE_BOTTOM_CLIP_TOP_WIDTH = 9;
 SIDE_BOTTOM_CLIP_BOTTOM_WIDTH = 8;
 SIDE_DRUM_AXIS_LENGTH = 15;
 
-SIDE_BORDER_THICKNESS = 7;
+SIDE_BORDER_THICKNESS = 8;
 
-SIDE_LENGTH = 80;
+SIDE_LENGTH = 85;
 
+/* Side of holes to join multiple split flap together */
+SIDE_JOINING_HOLE_DIAM = 3.5;
+
+/* Thickness of bottom part */
 BOTTOM_THICKNESS = 3;
 
-SIDE_ANGLE = -45;
+/* Width of hall effect sensor */
+HALL_EFFECT_SENSOR_WIDTH = 5;
+/* Diameter of hall effect sensor pcb screw */
+HALL_EFFECT_SENSOR_HOLE_DIAM = 3;
+HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM = 6;
+HALL_EFFECT_SENSOR_HOLE_HEIGHT = 15;
+HALL_EFFECT_SENSOR_SUPPORT_WIDTH = 10;
+
 
 module side_format_2d()
 {
-    hull() {
-        translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_END_ROUND/2]) circle(d = SIDE_END_ROUND);
-        square([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
-        translate([SIDE_LENGTH - SIDE_END_ROUND/2, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]) circle(d = SIDE_END_ROUND);
-        square([SIDE_LENGTH, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]);
-    }
-}
-
-
-module side_format_2d_empty_part()
-{
-    translate([- SIDE_BORDER_THICKNESS - FRONT_THICKNESS, - SIDE_BORDER_THICKNESS - BOTTOM_THICKNESS])
     difference() {
-        side_format_2d();
-        square([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
-        square([SIDE_LENGTH, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]);
+        hull() {
+            translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_END_ROUND/2]) circle(d = SIDE_END_ROUND);
+            square([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
+            translate([SIDE_LENGTH - SIDE_END_ROUND/2, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]) circle(d = SIDE_END_ROUND);
+            square([SIDE_LENGTH, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]);
+        }
+        translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, BOTTOM_THICKNESS + SIDE_BORDER_THICKNESS/2]) #circle(d = SIDE_JOINING_HOLE_DIAM);
+        translate([SIDE_LENGTH - SIDE_BORDER_THICKNESS, BOTTOM_THICKNESS + SIDE_BORDER_THICKNESS/2]) #circle(d = SIDE_JOINING_HOLE_DIAM);
+        translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_BORDER_THICKNESS]) #circle(d = SIDE_JOINING_HOLE_DIAM);
     }
 }
+
 
 module side_base()
 {
-    REDUCE_RATIO = (SIDE_LENGTH - SIDE_BORDER_THICKNESS) / SIDE_LENGTH;
     linear_extrude(SIDE_THICKNESS) {
-        difference() {
-            side_format_2d();
-            translate([SIDE_BORDER_THICKNESS + FRONT_THICKNESS, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]) resize([REDUCE_RATIO * (SIDE_LENGTH - FRONT_THICKNESS - SIDE_BORDER_THICKNESS), REDUCE_RATIO * (DISP_FULL_HEIGHT - SIDE_BORDER_THICKNESS - BOTTOM_THICKNESS)]) side_format_2d_empty_part();
-        }
-        /* Middle part to support axis */
-        intersection() {
-            side_format_2d();
-            translate([0, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2]) square([SIDE_LENGTH, DRUM_INNER_DIAMETER]);
-        }
-        /* Transverse support */
-        intersection() {
-            side_format_2d();
-            translate([0, SIDE_BORDER_THICKNESS/2]) rotate([0, 0, SIDE_ANGLE]) square([SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
-        }
+        side_format_2d();
     }
 }
 
@@ -346,20 +338,28 @@ module side_bottom_clips(tolerancy = 0)
 
 module side()
 {
-    side_full();
-    translate([FRONT_CLIP_HEIGHT, BOTTOM_THICKNESS, 0]) rotate([90, 0, 0]) side_bottom_clips();
+    difference()  {
+        union() {
+            side_full();
+            translate([FRONT_CLIP_HEIGHT, BOTTOM_THICKNESS, 0]) rotate([90, 0, 0]) side_bottom_clips();
+        }
+    }
 }
 
-/* Width of hall effect sensor */
-HALL_EFFECT_SENSOR_WIDTH = 5;
-/* Diameter of hall effect sensor pcb screw */
-HALL_EFFECT_SENSOR_HOLE_DIAM = 3;
-HALL_EFFECT_SENSOR_HOLE_HEIGHT = 15;
-HALL_EFFECT_SENSOR_SUPPORT_WIDTH = 10;
+module left_side()
+{
+    difference() {
+        side();
+        translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0])  hole(HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+    }
+}
 
 module right_side()
 {
-    side();
+    difference() {
+        side();
+        translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0])  hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+    }
 
     difference() {
         /* Axis for drum */
@@ -367,12 +367,6 @@ module right_side()
         
         /* Hole for hall effect sensor */
         translate([-DRUM_Y_OFFSET - HALL_EFFECT_SENSOR_WIDTH/2, DRUM_Z_OFFSET - (DRUM_INNER_DIAMETER/2 - DRUM_CENTER_DIAMETER/2) - DRUM_CENTER_DIAMETER/2, SIDE_THICKNESS]) #cube([HALL_EFFECT_SENSOR_WIDTH, DRUM_INNER_DIAMETER/2 - DRUM_CENTER_DIAMETER/2, DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2]);
-    }
-    /* Support for hall effect sensor PCB */
-    
-    translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0]) difference() {
-        hole(HALL_EFFECT_SENSOR_SUPPORT_WIDTH, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
-        hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
     }
 }
 
@@ -437,6 +431,48 @@ module bottom(with_stepper = 1)
     translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS + TOLERANCY, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor(with_stepper);
 }
 
+JIG_THICKNESS = 20;
+JIG_OVERLAP = 10;
+JIG_HEIGHT = 3;
+
+MIDDLE_HEIGHT = 50;
+MIDDLE_WIDTH = 10;
+
+FINGER_DIAMETER = 20;
+
+FULL_JIG_WIDTH = CARD_WIDTH + 2 * JIG_THICKNESS;
+FULL_JIG_HEIGHT = CARD_HEIGHT + 2 * JIG_THICKNESS;
+
+HOLE_DIAM = 5;
+HOLE_OFFSET = 10;
+
+module card_jig() {
+    difference() {
+        cube([FULL_JIG_WIDTH, FULL_JIG_HEIGHT, JIG_HEIGHT]);
+        translate([JIG_THICKNESS, JIG_THICKNESS, 0]) cube([CARD_WIDTH + TOLERANCY, CARD_HEIGHT + TOLERANCY, JIG_HEIGHT]);
+        /* Side opening */
+        translate([JIG_THICKNESS - MIDDLE_WIDTH, JIG_THICKNESS + CARD_HEIGHT/2 - MIDDLE_HEIGHT/2, 0]) cube([MIDDLE_WIDTH, MIDDLE_HEIGHT, JIG_HEIGHT]);
+        
+        translate([JIG_THICKNESS + CARD_WIDTH, JIG_THICKNESS + CARD_HEIGHT/2 - MIDDLE_HEIGHT/2, 0]) cube([MIDDLE_WIDTH, MIDDLE_HEIGHT, JIG_HEIGHT]);
+        
+        /* Finger thingy */
+        translate([JIG_THICKNESS + CARD_WIDTH/2, CARD_HEIGHT + JIG_THICKNESS, 0]) resize([CARD_WIDTH/2, FINGER_DIAMETER], JIG_HEIGHT) cylinder(d = 1, h = JIG_HEIGHT);
+        /* Finger thingy */
+        translate([JIG_THICKNESS + CARD_WIDTH/2,  JIG_THICKNESS, 0]) resize([CARD_WIDTH/2, FINGER_DIAMETER], JIG_HEIGHT) cylinder(d = 1, h = JIG_HEIGHT);
+        /* Holes */
+        translate([HOLE_OFFSET, HOLE_OFFSET]) cylinder(d = HOLE_DIAM, h = JIG_THICKNESS);
+        translate([FULL_JIG_WIDTH - HOLE_OFFSET, HOLE_OFFSET]) cylinder(d = HOLE_DIAM, h = JIG_THICKNESS);
+        translate([FULL_JIG_WIDTH - HOLE_OFFSET, FULL_JIG_HEIGHT - HOLE_OFFSET]) cylinder(d = HOLE_DIAM, h = JIG_THICKNESS);
+        translate([HOLE_OFFSET, FULL_JIG_HEIGHT - HOLE_OFFSET]) cylinder(d = HOLE_DIAM, h = JIG_THICKNESS);
+    }
+}
+
+module card_cut()
+{
+    flap();
+    mirror([0, 1, 0]) flap();  
+}
+
 module split_flap()
 {
     /* Drum */
@@ -462,7 +498,7 @@ if (GENERATE == undef) {
         mirror([1, 0, 0]) right_side();
     }
     if (GENERATE == "left_side") {
-        side();
+        left_side();
     }
     if (GENERATE == "front") {
         front();
@@ -473,8 +509,10 @@ if (GENERATE == undef) {
     if (GENERATE == "drum_with_magnet") {
         drum_with_magnet();
     }
-
-    if (GENERATE == "flap") {
-       projection(cut = false)  flap();
+    if (GENERATE == "card_jig") {
+        card_jig();
+    }
+    if (GENERATE == "card_cut") {
+        projection(cut = false)  card_cut();
     }
 }
