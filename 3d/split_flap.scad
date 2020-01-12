@@ -1,5 +1,6 @@
 include <prism.scad>
 include <parametric_pulley.scad>
+include <timing_belts.scad>
 include <28byj-48.scad>
 
 /* General tolenracy (should be upadate according to 3D printer) */
@@ -420,7 +421,7 @@ module motor_holder_with_motor(with_stepper)
 }
 
 CARD_RETAINER_WIDTH = BOTTOM_WIDTH - 2 * SIDE_BOTTOM_CLIP_HEIGHT;
-CARD_RETAINER_HEIGHT = DISP_BOTTOM_SIZE;
+CARD_RETAINER_HEIGHT = 14;
 CARD_RETAINER_THICKNESS = 3;
 CARD_RETAINER_Y_OFFSET = 5;
 
@@ -480,6 +481,45 @@ module card_cut()
     mirror([0, 1, 0]) flap();  
 }
 
+/* Number of teeeht of motor pulley */
+MOTOR_PULLEY_TEETH = DRUM_PULLEY_TEETH;
+
+module motor_pulley() 
+{
+    difference() {
+        pulley(teeth = MOTOR_PULLEY_TEETH, profile = 12, motor_shaft = 0, pulley_t_ht = DRUM_PULLEY_HEIGHT);
+        difference() {
+            translate([0, 0, DRUM_PULLEY_HEIGHT/2]) cylinder(r = 28byj48_shaft_radius, h = DRUM_PULLEY_HEIGHT * 2, center = true);
+            BLOCKER_WIDTH = (28byj48_shaft_radius * 2 - 28byj48_shaft_slotted_width) / 2;
+            translate([28byj48_shaft_slotted_width/2 + TOLERANCY, -28byj48_shaft_radius, -  DRUM_PULLEY_HEIGHT/2]) cube([(28byj48_shaft_radius * 2 - 28byj48_shaft_slotted_width) / 2, 28byj48_shaft_radius * 2 , DRUM_PULLEY_HEIGHT * 2]);
+            translate([-BLOCKER_WIDTH - 28byj48_shaft_slotted_width/2 - TOLERANCY, -28byj48_shaft_radius, -  DRUM_PULLEY_HEIGHT/2]) cube([BLOCKER_WIDTH, 28byj48_shaft_radius * 2 , DRUM_PULLEY_HEIGHT * 2]);
+        }
+    }
+}
+
+/* Belt cutter length */
+BELT_CUTTER_LENGTH = 160;
+/* GT2 Belt width */
+GT2_BELT_WIDTH = 6;
+/* Size of opening for cutter */
+BELT_CUTTER_OPENING = 0.8;
+
+/* Thickness of belt cutter */
+BELT_CUTTER_THICKNESS = 3;
+/* Thickness  */
+BELT_CUTTER_SIDE_THICKNESS = 2;
+
+module belt_cutter()
+{
+    difference() {
+        translate([0, -BELT_CUTTER_SIDE_THICKNESS - GT2_BELT_WIDTH/2, 0]) cube([BELT_CUTTER_LENGTH, GT2_BELT_WIDTH + 2 * BELT_CUTTER_SIDE_THICKNESS, BELT_CUTTER_THICKNESS]); 
+        translate([0, 0, 0.55]) rotate([90, 0, 0]) #belt_len(profile = tGT2_2, belt_width = GT2_BELT_WIDTH, len = BELT_CUTTER_LENGTH);
+        
+        translate([BELT_CUTTER_SIDE_THICKNESS, -BELT_CUTTER_OPENING/2, 0]) #cube([BELT_CUTTER_LENGTH / 2  - BELT_CUTTER_SIDE_THICKNESS * 2, BELT_CUTTER_OPENING, BELT_CUTTER_THICKNESS]); 
+        translate([BELT_CUTTER_SIDE_THICKNESS + BELT_CUTTER_LENGTH /2, -BELT_CUTTER_OPENING/2, 0]) #cube([BELT_CUTTER_LENGTH /2  - BELT_CUTTER_SIDE_THICKNESS * 2, BELT_CUTTER_OPENING, BELT_CUTTER_THICKNESS]); 
+    }
+}
+
 module split_flap()
 {
     /* Drum */
@@ -496,7 +536,7 @@ module split_flap()
 }
 
 if (GENERATE == undef) {
-    split_flap();
+    //split_flap();
 } else  {
     if (GENERATE == "bottom") {
         bottom(0);
@@ -513,11 +553,17 @@ if (GENERATE == undef) {
     if (GENERATE == "drum_with_belt") {
         drum_with_belt();
     }
+    if (GENERATE == "motor_pulley") {
+        motor_pulley();
+    }
     if (GENERATE == "drum_with_magnet") {
         drum_with_magnet();
     }
     if (GENERATE == "card_jig") {
         card_jig();
+    }
+    if (GENERATE == "belt_cutter") {
+        belt_cutter();
     }
     if (GENERATE == "card_cut") {
         projection(cut = false)  card_cut();

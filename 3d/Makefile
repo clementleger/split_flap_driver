@@ -1,4 +1,4 @@
-3d_parts = bottom right_side left_side front drum_with_magnet drum_with_belt card_jig
+3d_parts = bottom right_side left_side front drum_with_magnet drum_with_belt card_jig belt_cutter motor_pulley
 stl_output_dir = stl/
 stl_parts = $(addprefix $(stl_output_dir),$(addsuffix .stl,$(3d_parts)))
 
