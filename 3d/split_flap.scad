@@ -292,7 +292,6 @@ HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM = 6;
 HALL_EFFECT_SENSOR_HOLE_HEIGHT = 15;
 HALL_EFFECT_SENSOR_SUPPORT_WIDTH = 10;
 
-
 module side_format_2d()
 {
     difference() {
@@ -346,11 +345,13 @@ module side()
     }
 }
 
+HALL_EFFECT_SENSOR_Y_OFFSET = -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2;
+
 module left_side()
 {
     difference() {
         side();
-        translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0])  hole(HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+        translate([-DRUM_Y_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, 0])  hole(HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
     }
 }
 
@@ -358,7 +359,7 @@ module right_side()
 {
     difference() {
         side();
-        translate([-DRUM_Y_OFFSET, -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, 0])  hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+        translate([-DRUM_Y_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, 0])  hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
     }
 
     difference() {
@@ -418,6 +419,10 @@ module motor_holder_with_motor(with_stepper)
     }
 }
 
+CARD_RETAINER_WIDTH = BOTTOM_WIDTH - 2 * SIDE_BOTTOM_CLIP_HEIGHT;
+CARD_RETAINER_HEIGHT = DISP_BOTTOM_SIZE;
+CARD_RETAINER_THICKNESS = 3;
+CARD_RETAINER_Y_OFFSET = 5;
 
 module bottom(with_stepper = 1)
 {
@@ -429,11 +434,13 @@ module bottom(with_stepper = 1)
     }
     /* Motor_holder */
     translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS + TOLERANCY, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor(with_stepper);
+    /* Card retainer to have a better "flap" sound */
+    translate([SIDE_BOTTOM_CLIP_HEIGHT, CARD_RETAINER_Y_OFFSET, BOTTOM_THICKNESS]) cube([CARD_RETAINER_WIDTH, CARD_RETAINER_THICKNESS, CARD_RETAINER_HEIGHT]);
 }
 
 JIG_THICKNESS = 20;
 JIG_OVERLAP = 10;
-JIG_HEIGHT = 3;
+JIG_HEIGHT = 1;
 
 MIDDLE_HEIGHT = 50;
 MIDDLE_WIDTH = 10;
@@ -449,7 +456,7 @@ HOLE_OFFSET = 10;
 module card_jig() {
     difference() {
         cube([FULL_JIG_WIDTH, FULL_JIG_HEIGHT, JIG_HEIGHT]);
-        translate([JIG_THICKNESS, JIG_THICKNESS, 0]) cube([CARD_WIDTH + TOLERANCY, CARD_HEIGHT + TOLERANCY, JIG_HEIGHT]);
+        translate([JIG_THICKNESS, JIG_THICKNESS, 0]) cube([CARD_WIDTH + 1, CARD_HEIGHT + 1, JIG_HEIGHT]);
         /* Side opening */
         translate([JIG_THICKNESS - MIDDLE_WIDTH, JIG_THICKNESS + CARD_HEIGHT/2 - MIDDLE_HEIGHT/2, 0]) cube([MIDDLE_WIDTH, MIDDLE_HEIGHT, JIG_HEIGHT]);
         
@@ -480,7 +487,7 @@ module split_flap()
     /* Front */
     translate([-DISP_FULL_WIDTH/2, FRONT_THICKNESS, 0]) rotate([90, 0, 0]) front();
     /* Left Side */
-    translate([DISP_FULL_WIDTH/2, 0, 0]) rotate([90, 0, -90]) side();
+    translate([DISP_FULL_WIDTH/2, 0, 0]) rotate([90, 0, -90]) left_side();
     /* Right Side */
     mirror([1, 0, 0]) translate([DISP_FULL_WIDTH/2, 0, 0]) rotate([90, 0, -90]) right_side();
     
