@@ -226,8 +226,10 @@ assert(DISP_BORDER_SIZE >= DRUM_PULLEY_HEIGHT);
 /* Thickness of front part */
 FRONT_THICKNESS = 3;
 
+/* Disp window adjust */
+DISP_WINDOW_ADJUST = 3;
 /* Window height inside front display */
-DISP_WINDOW_HEIGHT = CARD_HEIGHT + DRUM_OUTER_DIAMETER / 2;
+DISP_WINDOW_HEIGHT = CARD_HEIGHT + DRUM_OUTER_DIAMETER / 2 - DISP_WINDOW_ADJUST;
 /* Add some slack around flaps */
 DISP_WINDOW_EXTRA_WIDTH = 1.6;
 /* Window width inside front display */
@@ -292,6 +294,7 @@ HALL_EFFECT_SENSOR_HOLE_DIAM = 3;
 HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM = 6;
 HALL_EFFECT_SENSOR_HOLE_HEIGHT = 15;
 HALL_EFFECT_SENSOR_SUPPORT_WIDTH = 10;
+HALL_EFFECT_SENSOR_SUPPORT_X_OFFSET = -DRUM_Y_OFFSET +5;
 
 module side_format_2d()
 {
@@ -352,7 +355,7 @@ module left_side()
 {
     difference() {
         side();
-        translate([-DRUM_Y_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, 0])  hole(HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+        translate([HALL_EFFECT_SENSOR_SUPPORT_X_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, 0])  hole(HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
     }
 }
 
@@ -360,7 +363,7 @@ module right_side()
 {
     difference() {
         side();
-        translate([-DRUM_Y_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, 0])  hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+        translate([HALL_EFFECT_SENSOR_SUPPORT_X_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, 0])  hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
     }
 
     difference() {
@@ -421,7 +424,7 @@ module motor_holder_with_motor(with_stepper)
 }
 
 CARD_RETAINER_WIDTH = BOTTOM_WIDTH - 2 * SIDE_BOTTOM_CLIP_HEIGHT;
-CARD_RETAINER_HEIGHT = 14;
+CARD_RETAINER_HEIGHT = 11;
 CARD_RETAINER_THICKNESS = 3;
 CARD_RETAINER_Y_OFFSET = 5;
 
@@ -536,7 +539,7 @@ module split_flap()
 }
 
 if (GENERATE == undef) {
-    //split_flap();
+    split_flap();
 } else  {
     if (GENERATE == "bottom") {
         bottom(0);
