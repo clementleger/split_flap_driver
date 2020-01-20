@@ -32,9 +32,9 @@ assert(DRUM_FLAPS_HOLE_DIAMETER > FLAP_CUT_OFFSET);
 /* Offset of flaps hole  from drum side */
 DRUM_FLAPS_HOLE_OFFSET = 1;
 /* Inner diameter of drum (ie tube connecting both ends) */
-DRUM_INNER_DIAMETER = 30;
+DRUM_INNER_DIAMETER = 40;
 /* Outer diameter of drum (ie where the flaps insert) */
-DRUM_OUTER_DIAMETER = 42;
+DRUM_OUTER_DIAMETER = 50;
 /* Thickness of side of drum (ie where the flaps insert) */
 DRUM_SIDE_THICKNESS = 2.5;
 
@@ -74,7 +74,7 @@ DRUM_PLUG_THICKNESS = 2;
 DRUM_PLUG_COUNT = 4;
 
 /* Number of tooth of pulley */
-DRUM_PULLEY_TEETH = 20;
+DRUM_PULLEY_TEETH = 35;
 /* Thickness of pulley */
 DRUM_PULLEY_HEIGHT = 3.5;
 
@@ -227,7 +227,7 @@ assert(DISP_BORDER_SIZE >= DRUM_PULLEY_HEIGHT);
 FRONT_THICKNESS = 3;
 
 /* Disp window adjust */
-DISP_WINDOW_ADJUST = 3;
+DISP_WINDOW_ADJUST = 4;
 /* Window height inside front display */
 DISP_WINDOW_HEIGHT = CARD_HEIGHT + DRUM_OUTER_DIAMETER / 2 - DISP_WINDOW_ADJUST;
 /* Add some slack around flaps */
@@ -265,10 +265,11 @@ module front()
     translate([DISP_FULL_WIDTH - FRONT_THICKNESS, 0, 0]) rotate([90, 0, 90]) front_clips();
 }
 
-DRUM_X_OFFSET = -DRUM_AXIS_EXTRA_WIDTH / 2 - CARD_WIDTH/2;
-DRUM_Y_OFFSET = - DRUM_FLAP_RADIUS;
+FLAP_Y_ADJUST = 1;
 FLAP_Z_ADJUST = 0.5;
-DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - CARD_HEIGHT/2 - FLAP_Z_ADJUST;
+DRUM_X_OFFSET = -DRUM_AXIS_EXTRA_WIDTH / 2 - CARD_WIDTH/2;
+DRUM_Y_OFFSET = -DRUM_FLAP_RADIUS + FLAP_Y_ADJUST;
+DRUM_Z_OFFSET = DISP_TOTAL_HEIGHT - DISP_TOP_SIZE - CARD_HEIGHT/2 + FLAP_Z_ADJUST;
 
 SIDE_END_ROUND = 15;
 SIDE_BOTTOM_CLIP_COUNT = 3;
