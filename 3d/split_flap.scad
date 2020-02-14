@@ -74,7 +74,7 @@ DRUM_PLUG_THICKNESS = 2;
 DRUM_PLUG_COUNT = 4;
 
 /* Number of tooth of pulley */
-DRUM_PULLEY_TEETH = 35;
+DRUM_PULLEY_TEETH = 25;
 /* Thickness of pulley */
 DRUM_PULLEY_HEIGHT = 3.5;
 
@@ -85,6 +85,7 @@ DRUM_WIDTH = CARD_WIDTH + DRUM_AXIS_EXTRA_WIDTH + DRUM_PLUG_WIDTH;
 DRUM_MAGNET_DIAMETER = 3;
 /* Magnet height */
 DRUM_MAGNET_HEIGHT = 3;
+DRUM_MAGNET_OFFSET_FROM_CENTER = DRUM_INNER_DIAMETER/2 - 2;
 
 $fn = 50;
 
@@ -156,7 +157,7 @@ module drum_with_magnet()
         drum_side();
         
         /* Magnet hole */
-        translate([DRUM_INNER_DIAMETER/2 - DRUM_MAGNET_DIAMETER/2 - DRUM_AXIS_THICKNESS, 0, 0]) cylinder(d = DRUM_MAGNET_DIAMETER, h = DRUM_MAGNET_HEIGHT);
+        translate([DRUM_MAGNET_OFFSET_FROM_CENTER - DRUM_MAGNET_DIAMETER/2 - DRUM_AXIS_THICKNESS, 0, 0]) cylinder(d = DRUM_MAGNET_DIAMETER, h = DRUM_MAGNET_HEIGHT);
     }
 }
 
@@ -217,7 +218,7 @@ module drum()
 /* Size of bottom border */
 DISP_BOTTOM_SIZE = 12;
 /* Size of top border */
-DISP_TOP_SIZE = 12;
+DISP_TOP_SIZE = 13;
 /* Add some slack to sides */
 DISP_BORDER_ADJUST = 0.8;
 DISP_BORDER_SIZE = DRUM_PULLEY_HEIGHT + DISP_BORDER_ADJUST;
@@ -227,7 +228,7 @@ assert(DISP_BORDER_SIZE >= DRUM_PULLEY_HEIGHT);
 FRONT_THICKNESS = 3;
 
 /* Disp window adjust */
-DISP_WINDOW_ADJUST = 4;
+DISP_WINDOW_ADJUST = 5;
 /* Window height inside front display */
 DISP_WINDOW_HEIGHT = CARD_HEIGHT + DRUM_OUTER_DIAMETER / 2 - DISP_WINDOW_ADJUST;
 /* Add some slack around flaps */
@@ -360,6 +361,9 @@ module left_side()
     }
 }
 
+HALL_EFFECT_SENSOR_HEIGHT = 3;
+HALL_EFFECT_SENSOR_HOLE_LENGTH = DRUM_INNER_DIAMETER/2 - DRUM_MAGNET_OFFSET_FROM_CENTER + HALL_EFFECT_SENSOR_HEIGHT;
+
 module right_side()
 {
     difference() {
@@ -372,7 +376,7 @@ module right_side()
         translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET, SIDE_THICKNESS]) cylinder(d = DRUM_INNER_DIAMETER, h = DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2 );
         
         /* Hole for hall effect sensor */
-        translate([-DRUM_Y_OFFSET - HALL_EFFECT_SENSOR_WIDTH/2, DRUM_Z_OFFSET - (DRUM_INNER_DIAMETER/2 - DRUM_CENTER_DIAMETER/2) - DRUM_CENTER_DIAMETER/2, SIDE_THICKNESS]) #cube([HALL_EFFECT_SENSOR_WIDTH, DRUM_INNER_DIAMETER/2 - DRUM_CENTER_DIAMETER/2, DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2]);
+        translate([-DRUM_Y_OFFSET - HALL_EFFECT_SENSOR_WIDTH/2, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, SIDE_THICKNESS]) #cube([HALL_EFFECT_SENSOR_WIDTH, HALL_EFFECT_SENSOR_HOLE_LENGTH, DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2]);
     }
 }
 
@@ -425,7 +429,7 @@ module motor_holder_with_motor(with_stepper)
 }
 
 CARD_RETAINER_WIDTH = BOTTOM_WIDTH - 2 * SIDE_BOTTOM_CLIP_HEIGHT;
-CARD_RETAINER_HEIGHT = 11;
+CARD_RETAINER_HEIGHT = 15;
 CARD_RETAINER_THICKNESS = 3;
 CARD_RETAINER_Y_OFFSET = 5;
 
@@ -485,8 +489,9 @@ module card_cut()
     mirror([0, 1, 0]) flap();  
 }
 
+MOTOR_RATIO = 1;
 /* Number of teeeht of motor pulley */
-MOTOR_PULLEY_TEETH = DRUM_PULLEY_TEETH;
+MOTOR_PULLEY_TEETH = MOTOR_RATIO * DRUM_PULLEY_TEETH;
 
 module motor_pulley() 
 {
