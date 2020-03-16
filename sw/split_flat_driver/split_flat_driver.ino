@@ -10,10 +10,10 @@
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 #define PCF8574_BASE_ADDR	0x20
 #define SPI_FREQUENCY	1000000
+#define SPI_SR_CS	D8
 
 /* Shared interrupt */
 #define INPUT_EXP_INT	D3
-
 #define INPUT_EXP1_ADDR	(PCF8574_BASE_ADDR)
 
 #define STEP_DELAY_US	2000
@@ -57,14 +57,18 @@ struct split_flat_con {
 };
 
 static struct split_flat_con split_flaps[] = {
-	{{0, 1, 2, 3}, 0, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
-	{{7, 6, 5, 4}, 1, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
+	{{3, 2, 1, 0}, 0, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
+	{{4, 5, 6, 7}, 1, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
 	{{8, 9, 10, 11}, 2, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
 	{{12, 13, 14, 15}, 3, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
+	{{16, 17, 18, 19}, 4, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
+	{{20, 21, 22, 23}, 5, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
+	{{24, 25, 26, 27}, 6, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
+	{{28, 29, 30, 31}, 7, 0, ' ', ' ', ' ', CHARS_COUNT, flaps_chars, 0},
 };
 
 /* Bitmask which will */
-static u8 shift_register_buffer[ARRAY_SIZE(split_flaps) * 4] = {0};
+static u8 shift_register_buffer[ARRAY_SIZE(split_flaps) / 2] = {0};
 
 struct pcf_input {
 	int pin;
@@ -245,6 +249,10 @@ static void flaps_update_all(void)
 	SPI.transfer(shift_register_buffer, ARRAY_SIZE(shift_register_buffer));
 	SPI.endTransaction();
 
+	digitalWrite(SPI_SR_CS, LOW);
+	digitalWrite(SPI_SR_CS, HIGH);
+	digitalWrite(SPI_SR_CS, LOW);
+
 	/* Reset buffer */
 	memset(shift_register_buffer, 0, ARRAY_SIZE(shift_register_buffer));
 }
@@ -351,17 +359,21 @@ void setup(void)
 	Wire.begin(D2, D1);
 
 	Serial.println("Init inputs");
+	pinMode(INPUT_EXP_INT, INPUT_PULLUP);
+
 	/* Configure IO expander interrupts pins as input */
 	for (uint8_t i = 0; i < ARRAY_SIZE(pcf_inputs); i++) {
 		struct pcf_input *in = &pcf_inputs[i];
-		pinMode(in->pin, INPUT_PULLUP);
 
 		/* Set all pins has input */
 		Wire.beginTransmission(in->addr);
 		Wire.write(0xFF);
 		Wire.endTransmission();
 	}
-
+	Serial.println("Init SPI");
+	
+	pinMode(SPI_SR_CS, OUTPUT);
+	digitalWrite(SPI_SR_CS, LOW);
 	SPI.begin();
 
 	sync_reset_flaps();
