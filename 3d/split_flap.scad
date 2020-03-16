@@ -1,6 +1,7 @@
 include <prism.scad>
 include <parametric_pulley.scad>
 include <timing_belts.scad>
+include <roundedcube.scad>
 include <28byj-48.scad>
 
 /* General tolenracy (should be upadate according to 3D printer) */
@@ -88,6 +89,34 @@ DRUM_MAGNET_HEIGHT = 3;
 DRUM_MAGNET_OFFSET_FROM_CENTER = DRUM_INNER_DIAMETER/2 - 2;
 
 $fn = 50;
+
+/* Ziptie width */
+ZIPTIE_WIDTH = 3.5;
+/* Ziptie thickness */
+ZIPTIE_THICKNESS = 1.4;
+/* Sizeof side mount */
+ZIPTIE_MOUNT_SIDE_WIDTH = 6;
+/* Height of mouting base */
+ZIPTIE_MOUNT_HEIGHT = 6;
+/* Added thickness on top of ziptie hole */
+ZIPTIE_MOUNT_ADD_THICKNESS = 1.5;
+/* Full ziptie mount thickness */
+ZIPTIE_MOUNT_THICKNESS = ZIPTIE_MOUNT_ADD_THICKNESS + ZIPTIE_THICKNESS;
+
+module ziptie_mount() {
+    difference() {
+        union () {
+            difference() {
+                cube([ZIPTIE_WIDTH, ZIPTIE_MOUNT_HEIGHT , ZIPTIE_MOUNT_THICKNESS]);
+                cube([ZIPTIE_WIDTH, ZIPTIE_MOUNT_HEIGHT , ZIPTIE_THICKNESS]);
+            }
+            translate([ZIPTIE_WIDTH + ZIPTIE_MOUNT_SIDE_WIDTH, 0, 0]) rotate([0, 0, 90]) prism(ZIPTIE_MOUNT_HEIGHT, ZIPTIE_MOUNT_SIDE_WIDTH,ZIPTIE_MOUNT_THICKNESS);
+            translate([-ZIPTIE_MOUNT_SIDE_WIDTH, ZIPTIE_MOUNT_HEIGHT, 0]) rotate([0, 0, -90]) prism(ZIPTIE_MOUNT_HEIGHT, ZIPTIE_MOUNT_SIDE_WIDTH,ZIPTIE_MOUNT_THICKNESS);
+        }
+        translate([-ZIPTIE_MOUNT_SIDE_WIDTH, ZIPTIE_MOUNT_HEIGHT/2 - ZIPTIE_WIDTH/2, 0]) cube([ZIPTIE_WIDTH + 2 * ZIPTIE_MOUNT_SIDE_WIDTH, ZIPTIE_WIDTH , ZIPTIE_THICKNESS + SMALL_TOLERANCY]);
+    }
+}
+
 
 module hole(width, height, thickness)
 {
@@ -218,7 +247,7 @@ module drum()
 /* Size of bottom border */
 DISP_BOTTOM_SIZE = 12;
 /* Size of top border */
-DISP_TOP_SIZE = 13;
+DISP_TOP_SIZE = 16;
 /* Add some slack to sides */
 DISP_BORDER_ADJUST = 0.8;
 DISP_BORDER_SIZE = DRUM_PULLEY_HEIGHT + DISP_BORDER_ADJUST;
@@ -284,7 +313,7 @@ SIDE_BORDER_THICKNESS = 8;
 SIDE_LENGTH = 85;
 
 /* Side of holes to join multiple split flap together */
-SIDE_JOINING_HOLE_DIAM = 3.5;
+JOINING_HOLE_DIAM = 3.5;
 
 /* Thickness of bottom part */
 BOTTOM_THICKNESS = 3;
@@ -294,22 +323,23 @@ HALL_EFFECT_SENSOR_WIDTH = 5;
 /* Diameter of hall effect sensor pcb screw */
 HALL_EFFECT_SENSOR_HOLE_DIAM = 3;
 HALL_EFFECT_SENSOR_HOLE_HEAD_DIAM = 6;
-HALL_EFFECT_SENSOR_HOLE_HEIGHT = 15;
+HALL_EFFECT_SENSOR_HOLE_HEIGHT = 16;
 HALL_EFFECT_SENSOR_SUPPORT_WIDTH = 10;
-HALL_EFFECT_SENSOR_SUPPORT_X_OFFSET = -DRUM_Y_OFFSET +5;
+HALL_EFFECT_SENSOR_SUPPORT_X_OFFSET = -DRUM_Y_OFFSET + 6;
+
+SIDE_HOLE_WIDTH = 30;
+SIDE_HOLE_HEIGHT = DISP_FULL_HEIGHT - 30;
 
 module side_format_2d()
 {
     difference() {
-        hull() {
-            translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_END_ROUND/2]) circle(d = SIDE_END_ROUND);
-            square([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT]);
-            translate([SIDE_LENGTH - SIDE_END_ROUND/2, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]) circle(d = SIDE_END_ROUND);
-            square([SIDE_LENGTH, SIDE_BORDER_THICKNESS + BOTTOM_THICKNESS]);
-        }
-        translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, BOTTOM_THICKNESS + SIDE_BORDER_THICKNESS/2]) #circle(d = SIDE_JOINING_HOLE_DIAM);
-        translate([SIDE_LENGTH - SIDE_BORDER_THICKNESS, BOTTOM_THICKNESS + SIDE_BORDER_THICKNESS/2]) #circle(d = SIDE_JOINING_HOLE_DIAM);
-        translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_BORDER_THICKNESS]) #circle(d = SIDE_JOINING_HOLE_DIAM);
+        square([SIDE_LENGTH, DISP_FULL_HEIGHT]);
+        #translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, SIDE_BORDER_THICKNESS]) circle(d = JOINING_HOLE_DIAM);
+        translate([SIDE_LENGTH - SIDE_BORDER_THICKNESS, SIDE_BORDER_THICKNESS]) circle(d = JOINING_HOLE_DIAM);
+        translate([SIDE_LENGTH - SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_BORDER_THICKNESS]) circle(d = JOINING_HOLE_DIAM);
+        translate([FRONT_THICKNESS + SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT - SIDE_BORDER_THICKNESS]) circle(d = JOINING_HOLE_DIAM);
+        
+        #translate([SIDE_LENGTH - SIDE_HOLE_WIDTH - SIDE_BORDER_THICKNESS, DISP_FULL_HEIGHT/2 - SIDE_HOLE_HEIGHT/2]) square([SIDE_HOLE_WIDTH, SIDE_HOLE_HEIGHT]);
     }
 }
 
@@ -347,11 +377,16 @@ module side()
         union() {
             side_full();
             translate([FRONT_CLIP_HEIGHT, BOTTOM_THICKNESS, 0]) rotate([90, 0, 0]) side_bottom_clips();
+            translate([FRONT_CLIP_HEIGHT, DISP_FULL_HEIGHT, 0]) rotate([90, 0, 0]) side_bottom_clips();
         }
     }
 }
 
-HALL_EFFECT_SENSOR_Y_OFFSET = -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2;
+HALL_EFFECT_SENSOR_Y_OFFSET = -HALL_EFFECT_SENSOR_HOLE_HEIGHT + DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2 - HALL_EFFECT_SENSOR_HOLE_DIAM/2;
+HALL_EFFECT_SENSOR_PCB_THICKNESS = 2;
+HALL_EFFECT_SENSOR_PCB_WIDTH = 15;
+HALL_EFFECT_SENSOR_PCB_HEIGHT = HALL_EFFECT_SENSOR_HOLE_HEIGHT;
+HALL_EFFECT_SENSOR_PCB_HOLE_OFFSET = 4;
 
 module left_side()
 {
@@ -369,6 +404,9 @@ module right_side()
     difference() {
         side();
         translate([HALL_EFFECT_SENSOR_SUPPORT_X_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, 0])  hole(HALL_EFFECT_SENSOR_HOLE_DIAM, HALL_EFFECT_SENSOR_HOLE_HEIGHT, SIDE_THICKNESS);
+        
+        translate([HALL_EFFECT_SENSOR_SUPPORT_X_OFFSET - HALL_EFFECT_SENSOR_PCB_WIDTH + HALL_EFFECT_SENSOR_PCB_HOLE_OFFSET, HALL_EFFECT_SENSOR_Y_OFFSET, SIDE_THICKNESS - HALL_EFFECT_SENSOR_PCB_THICKNESS])  cube([HALL_EFFECT_SENSOR_PCB_WIDTH, HALL_EFFECT_SENSOR_PCB_HEIGHT, SIDE_THICKNESS]);
+        
     }
 
     difference() {
@@ -376,7 +414,7 @@ module right_side()
         translate([-DRUM_Y_OFFSET, DRUM_Z_OFFSET, SIDE_THICKNESS]) cylinder(d = DRUM_INNER_DIAMETER, h = DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2 );
         
         /* Hole for hall effect sensor */
-        translate([-DRUM_Y_OFFSET - HALL_EFFECT_SENSOR_WIDTH/2, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, SIDE_THICKNESS]) #cube([HALL_EFFECT_SENSOR_WIDTH, HALL_EFFECT_SENSOR_HOLE_LENGTH, DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2]);
+        translate([-DRUM_Y_OFFSET - HALL_EFFECT_SENSOR_WIDTH/2, DRUM_Z_OFFSET - DRUM_INNER_DIAMETER/2, SIDE_THICKNESS]) cube([HALL_EFFECT_SENSOR_WIDTH, HALL_EFFECT_SENSOR_HOLE_LENGTH, DRUM_PULLEY_HEIGHT + DRUM_AXIS_EXTRA_WIDTH / 2]);
     }
 }
 
@@ -431,16 +469,39 @@ module motor_holder_with_motor(with_stepper)
 CARD_RETAINER_WIDTH = BOTTOM_WIDTH - 2 * SIDE_BOTTOM_CLIP_HEIGHT;
 CARD_RETAINER_HEIGHT = 15;
 CARD_RETAINER_THICKNESS = 3;
-CARD_RETAINER_Y_OFFSET = 5;
+CARD_RETAINER_Y_OFFSET = 7;
+TOP_HOLE_X_COUNT = 2;
+TOP_HOLE_Y_COUNT = 3;
+TOP_HOLE_Y_OFFSET = 15;
+TOP_HOLE_X_OFFSET = 20;
 
-module bottom(with_stepper = 1)
+TOP_HOLE_X_SPACING = (BOTTOM_WIDTH - TOP_HOLE_X_OFFSET*2)/ (TOP_HOLE_X_COUNT - 1);
+TOP_HOLE_Y_SPACING = (SIDE_LENGTH - TOP_HOLE_Y_OFFSET*2)/ (TOP_HOLE_Y_COUNT - 1);
+
+module top_bottom()
 {
     difference() {
         cube([BOTTOM_WIDTH, SIDE_LENGTH, BOTTOM_THICKNESS]);
         /* Clips */
         translate([BOTTOM_WIDTH + SIDE_THICKNESS, FRONT_CLIP_HEIGHT, 0]) rotate([0, 0, 90]) side_bottom_clips(TOLERANCY);
         translate([-SIDE_THICKNESS, FRONT_CLIP_HEIGHT, 0]) rotate([0, 0, 90]) mirror([0, 1, 0]) side_bottom_clips(TOLERANCY);
+        /* Hole for junctions between module */
+        for (holex=[0:TOP_HOLE_X_COUNT- 1]) {
+            for (holey=[0:TOP_HOLE_Y_COUNT- 1]) {
+                translate([TOP_HOLE_X_OFFSET + holex * TOP_HOLE_X_SPACING, TOP_HOLE_Y_OFFSET + holey * TOP_HOLE_Y_SPACING, 0]) cylinder(d = JOINING_HOLE_DIAM, h = BOTTOM_THICKNESS);
+            }
+        }
     }
+}
+
+module top()
+{
+    top_bottom();
+}
+
+module bottom(with_stepper = 1)
+{
+    top_bottom();
     /* Motor_holder */
     translate([28byj48_shaft_height - MOTOR_HOLDER_THICKNESS + TOLERANCY, SIDE_LENGTH - MOTOR_HOLDER_WIDTH, BOTTOM_THICKNESS]) motor_holder_with_motor(with_stepper);
     /* Card retainer to have a better "flap" sound */
@@ -542,6 +603,8 @@ module split_flap()
     
     /* Bottom */
     translate([BOTTOM_WIDTH/2, 0, 0]) rotate([0, 0, 180]) bottom();
+    /* Bottom */
+    translate([BOTTOM_WIDTH/2, 0, DISP_FULL_HEIGHT - BOTTOM_THICKNESS]) rotate([0, 0, 180]) top();
 }
 
 if (GENERATE == undef) {
@@ -549,6 +612,9 @@ if (GENERATE == undef) {
 } else  {
     if (GENERATE == "bottom") {
         bottom(0);
+    }
+    if (GENERATE == "top") {
+        translate() top();
     }
     if (GENERATE == "right_side") {
         mirror([1, 0, 0]) right_side();
