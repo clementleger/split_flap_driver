@@ -686,17 +686,6 @@ Wire Wire Line
 Connection ~ 3600 3950
 Wire Wire Line
 	3600 3950 3150 3950
-$Comp
-L power:+3.3V #PWR071
-U 1 1 5DFC4BEF
-P 3450 3250
-F 0 "#PWR071" H 3450 3100 50  0001 C CNN
-F 1 "+3.3V" H 3465 3423 50  0000 C CNN
-F 2 "" H 3450 3250 50  0001 C CNN
-F 3 "" H 3450 3250 50  0001 C CNN
-	1    3450 3250
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3450 3250 3450 3350
 Wire Wire Line
@@ -706,4 +695,15 @@ Wire Wire Line
 Connection ~ 3450 3350
 Wire Wire Line
 	3450 3350 3450 3450
+$Comp
+L power:+3.3V #PWR0102
+U 1 1 5E73E164
+P 3450 3250
+F 0 "#PWR0102" H 3450 3100 50  0001 C CNN
+F 1 "+3.3V" H 3465 3423 50  0000 C CNN
+F 2 "" H 3450 3250 50  0001 C CNN
+F 3 "" H 3450 3250 50  0001 C CNN
+	1    3450 3250
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
